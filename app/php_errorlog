@@ -1,0 +1,4 @@
+[12-Jul-2016 07:07:35 CST6CDT] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/hostin88/public_html/versalles1.com/app/Lote.php on line 7
+[12-Jul-2016 07:07:41 CST6CDT] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/hostin88/public_html/versalles1.com/app/User.php on line 13
+[12-Jul-2016 08:30:32 CST6CDT] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/hostin88/public_html/versalles1.com/app/Lote.php on line 7
+[12-Jul-2016 08:30:38 CST6CDT] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/hostin88/public_html/versalles1.com/app/User.php on line 13

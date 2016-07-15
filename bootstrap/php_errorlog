@@ -1,0 +1,8 @@
+[12-Jul-2016 07:07:44 CST6CDT] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/hostin88/public_html/versalles1.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/hostin88/public_html/versalles1.com/bootstrap/app.php on line 14
+[12-Jul-2016 08:30:41 CST6CDT] PHP Fatal error:  Uncaught Error: Class 'Illuminate\Foundation\Application' not found in /home/hostin88/public_html/versalles1.com/bootstrap/app.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/hostin88/public_html/versalles1.com/bootstrap/app.php on line 14
