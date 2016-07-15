@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
 use App\Http\Requests;
 use App\User;
+use App\Http\Controllers\Controller;
 
 class pagos extends Controller
 {
@@ -101,6 +102,49 @@ class pagos extends Controller
      */
     public function inicial()
     {
-        return view('pagos.reg_saldo');
+
+        $users = DB::select('SELECT id, homenumber, name FROM users WHERE id_role = 0 AND name <> "" ');
+        $data = array();
+
+        foreach ($users as $value) {
+            $data[$value->id] = $value->homenumber." - ".$value->name;
+        }
+
+        return view('pagos.reg_saldo', ['usuarios'=>$data]);
+    }
+
+    /**
+     * Show the form for saving the starting balance.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function save_inicial(Request $request)
+    {
+
+        $DateTime = \DateTime::createFromFormat('d/m/Y', $request->fecha);
+        $fecha = $DateTime->format('Y-m-d');
+        
+        try {
+
+            $id =  DB::table('pago')->insertGetId(
+                [
+                'pago_tipo_id'     => $request->tipo_id, 
+                'pago_concepto'     => $request->concepto,
+                'pago_fecha'        => $fecha,
+                'pago_usuario_id'   => $request->usuarios,
+                'pago_monto'        => $request->monto,
+                'pago_estado_id'    => $request->estado_id
+                ]
+            );
+
+            return redirect()->back()->withInput()->with('message','Saldo inicial registrado con éxito.');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+
+            return redirect()->back()->withInput()->with('message',$e->errorInfo[2]);
+
+        }
+
+        
     }
 }

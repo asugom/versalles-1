@@ -14,7 +14,6 @@
 @endsection
 
 @section('wrapper')
-
 <section id="content_wrapper">
       <!-- Start: Topbar -->
       <header id="topbar" class="alt" style=" min-height: 10px;padding: 10px 10px; ">
@@ -45,10 +44,25 @@
                 <div class="panel-body bg-light">
                     <h4 class="micro-header">Registrar saldo inicial</h4>
 
-                    {!! Form::open(array('route' => 'sndcorreo','method'=>'POST','id'=>'admin-form','files'=>'true')) !!}
+                    {!! Form::open(array('route' => 'save_saldo','method'=>'POST','id'=>'admin-form')) !!}
+                        
+                        <input type="hidden" name="tipo_id" id="tipo_id" value="1">
+                        <input type="hidden" name="estado_id" id="estado_id" value="2">
 
                         <div class="section-divider mv40" id="spy4">
                             <span>Datos del recibo</span>
+                        </div>
+
+                         <div class="row">
+                            <div class="col-md-12">
+                                <div class="section">
+                                    <label class="field select">
+                                        {!! Form::select('usuarios', $usuarios, null, ['placeholder' => 'Seleccione un usuario']) !!}
+                                        <i class="arrow"></i>
+                                    </label>
+                                     
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -59,8 +73,7 @@
                                         <label for="concepto" class="field-icon">
                                             <i class="fa fa-file-text-o"></i>
                                         </label>
-                                    </label>
-                                    <input type="hidden" name="tipo" id="tipo" value="0">
+                                    </label>        
                                 </div>
                             </div>
                         </div>
@@ -89,7 +102,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="button btn-primary mr10 pull-right">Guardar</button>
+                        <button type="submit" class="button btn-primary mr10 pull-right">Guardar</button>
                     {!! Form::close() !!}
                 </div>
               </div>
@@ -185,12 +198,14 @@
       ------------------------------------------ */
 
       rules: {
-        titulo: {
+        monto: {
             required: true
         },
-        texto:{
-            required:true,
-            minlength:8
+        usuarios: {
+            required: true
+        },
+        fecha:{
+            required:true
         }
       },
 
@@ -198,12 +213,15 @@
       ---------------------------------------------- */
 
       messages: {
-        titulo: {
-          required: 'Ingrese el titulo'
+        monto: {
+          required: 'Ingrese el monto'
         },
-          texto:{
-              required:'Ingrese el cuerpo del mensaje'
-          }
+        usuarios: {
+          required: 'Seleccione un usuario'
+        },
+        fecha:{
+            required:'Seleccione una fecha'
+        }
       },
 
       /* @validation highlighting + error placement  
@@ -246,8 +264,8 @@
               addclass: "stack_top_right",
               type: "success",
               stack: Stacks["stack_top_right"],
-              width: "290px",
-              delay: 1000
+              width: "350px",
+              delay: 1500
           });
       }
 

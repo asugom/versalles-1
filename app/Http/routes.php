@@ -78,6 +78,11 @@ Route::get('registrar_saldo',[
     'as'=> 'registrar_saldo'
 ]);
 
+Route::post('save_saldo',[
+    'uses'=>'pagos@save_inicial',
+    'as'=> 'save_saldo'
+]);
+
 //servicios
 Route::get('ver_servicios',[
     'uses'=>'servicios@create',
