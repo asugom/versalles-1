@@ -45,19 +45,43 @@
                 <div class="panel-body bg-light">
                     <h4 class="micro-header">Registrar recibo de pago</h4>
 
-                    {!! Form::open(array('route' => 'sndcorreo','method'=>'POST','id'=>'admin-form','files'=>'true')) !!}
+                    {!! Form::open(array('route' => 'save_pago','method'=>'POST','id'=>'admin-form')) !!}
+                          
+                          @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
+                              <input type="hidden" name="estado_id" value="2">
+                          @else
+                              <input type="hidden" name="estado_id" value="1">
+                          @endif
+
                           <div class="section-divider mb40" id="spy1">
                               <span>Seleccione el tipo de pago realizado</span>
                           </div>
-                          
-                          	<div>
-							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio">Transferencia</label>
-							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio">Depósito</label>
-							</div>
-                         
+                        	<div>
+            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio">Transferencia</label>
+            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio">Depósito</label>
+            							</div>
+                       
                           <div class="section-divider mv40" id="spy4">
                               <span>Datos del recibo</span>
                           </div>
+
+                          @if((Auth::user()->id_role == 1 || Auth::user()_>id_role == 2) && count($usuarios))
+                            <div class="row">
+                              <div class="col-md-12">
+                                  <div class="section">
+                                      <label class="field select">
+                                          {!! Form::select('usuarios', $usuarios, null, ['placeholder' => 'Seleccione un usuario']) !!}
+                                          <i class="arrow"></i>
+                                      </label>
+                                       
+                                  </div>
+                              </div>
+                            </div>
+                          @else
+                            <!-- <input type="hidden" name="usuarios" value="{{ $usuarios }}"> -->
+                            {!! Form::hidden('usuarios', $usuarios) !!}
+                          @endif
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="section">
@@ -70,6 +94,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="section">
@@ -106,7 +131,7 @@
                             </div>
                         </div>
 
-                        <button type="button" class="button btn-primary mr10 pull-right">Guardar</button>
+                        <button type="submit" class="button btn-primary mr10 pull-right">Guardar</button>
                     {!! Form::close() !!}
                 </div>
               </div>

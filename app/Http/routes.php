@@ -72,6 +72,12 @@ Route::get('registrar_pago',[
     'uses'=>'pagos@create',
     'as'=> 'registrar_pago'
 ]);
+
+Route::post('save_pago',[
+    'uses'=>'pagos@store',
+    'as'=> 'save_pago'
+]);
+
 //pagos -> saldo inicial
 Route::get('registrar_saldo',[
     'uses'=>'pagos@inicial',
