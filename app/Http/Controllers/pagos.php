@@ -125,10 +125,11 @@ class pagos extends Controller
         $fecha = $DateTime->format('Y-m-d');
         
         try {
+            DB::beginTransaction();
 
             $id =  DB::table('pago')->insertGetId(
                 [
-                'pago_tipo_id'     => $request->tipo_id, 
+                'pago_tipo_id'      => $request->tipo_id, 
                 'pago_concepto'     => $request->concepto,
                 'pago_fecha'        => $fecha,
                 'pago_usuario_id'   => $request->usuarios,
@@ -137,10 +138,12 @@ class pagos extends Controller
                 ]
             );
 
+            DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
+            DB::commit();
             return redirect()->back()->withInput()->with('message','Saldo inicial registrado con éxito.');
 
         } catch (\Illuminate\Database\QueryException $e) {
-
+            DB::rollBack();
             return redirect()->back()->withInput()->with('message',$e->errorInfo[2]);
 
         }
