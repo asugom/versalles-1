@@ -33,7 +33,8 @@
 
       <!-- Begin: Content -->
       <section id="content" class="table-layout animated fadeIn">
-          <input type="hidden" id="message" value="{{ Session::get('message') }}">
+          <input type="hidden" id="success" value="{{ Session::get('success') }}">
+          <input type="hidden" id="danger" value="{{ Session::get('danger') }}">
         <!-- begin: .tray-center -->
         <div class="tray tray-center">
 
@@ -56,16 +57,16 @@
                           <div class="section-divider mb40" id="spy1">
                               <span>Seleccione el tipo de pago realizado</span>
                           </div>
-                        	<div>
-            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio">Transferencia</label>
-            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio">Depósito</label>
+                        	<div class="option-group field">
+            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" >Transferencia</label>
+            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" >Depósito</label>
             							</div>
                        
                           <div class="section-divider mv40" id="spy4">
                               <span>Datos del recibo</span>
                           </div>
 
-                          @if((Auth::user()->id_role == 1 || Auth::user()_>id_role == 2) && count($usuarios))
+                          @if((Auth::user()->id_role == 1 || Auth::user()->id_role == 2) && is_array($usuarios))
                             <div class="row">
                               <div class="col-md-12">
                                   <div class="section">
@@ -78,7 +79,6 @@
                               </div>
                             </div>
                           @else
-                            <!-- <input type="hidden" name="usuarios" value="{{ $usuarios }}"> -->
                             {!! Form::hidden('usuarios', $usuarios) !!}
                           @endif
 
@@ -219,12 +219,24 @@
       ------------------------------------------ */
 
       rules: {
-        titulo: {
+        concepto: {
             required: true
         },
-        texto:{
-            required:true,
-            minlength:8
+        usuarios: {
+            required: true
+        },
+        monto: {
+            required: true,
+            number: true
+        },
+        recibo: {
+            required: true
+        },
+        optradio: {
+            required: true
+        },
+        fecha:{
+            required: true
         }
       },
 
@@ -232,12 +244,25 @@
       ---------------------------------------------- */
 
       messages: {
-        titulo: {
-          required: 'Ingrese el titulo'
+        concepto: {
+          required: 'Ingrese el concepto del pago'
         },
-          texto:{
-              required:'Ingrese el cuerpo del mensaje'
-          }
+        usuarios: {
+          required: 'Seleccione un usuario para realizar el pago'
+        },
+        monto: {
+          required: 'Ingrese el monto del pago',
+          number: 'Ingrese un número válido'
+        },
+        recibo: {
+          required: 'Ingrese el número del recibo del pago'
+        },
+        optradio: {
+          required: 'Seleccione un tipo de pago'
+        },
+        fecha:{
+            required:'Ingrese la fecha del pago'
+        }
       },
 
       /* @validation highlighting + error placement  
@@ -259,7 +284,7 @@
 
     });
 
-      if ($("#message").val()!='') {
+      if ($("#success").val()!='') {
 
           var Stacks = {
               stack_top_right: {
@@ -274,14 +299,37 @@
           // Create new Notification
           new PNotify({
               title: 'Aviso',
-              text: $("#message").val(),
+              text: $("#success").val(),
               shadow: "true",
               opacity: "1",
               addclass: "stack_top_right",
-              type: "success",
+              type: 'success',
               stack: Stacks["stack_top_right"],
-              width: "290px",
-              delay: 1000
+              width: "350px",
+              delay: 1500
+          });
+      }else if ($("#danger").val()!='') {
+        var Stacks = {
+              stack_top_right: {
+                  "dir1": "down",
+                  "dir2": "left",
+                  "push": "top",
+                  "spacing1": 10,
+                  "spacing2": 10
+              }
+          }
+
+          // Create new Notification
+          new PNotify({
+              title: 'Aviso',
+              text: $("#danger").val(),
+              shadow: "true",
+              opacity: "1",
+              addclass: "stack_top_right",
+              type: 'danger',
+              stack: Stacks["stack_top_right"],
+              width: "350px",
+              delay: 1500
           });
       }
 

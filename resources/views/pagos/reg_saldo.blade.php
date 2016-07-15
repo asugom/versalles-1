@@ -32,7 +32,8 @@
 
       <!-- Begin: Content -->
       <section id="content" class="table-layout animated fadeIn">
-          <input type="hidden" id="message" value="{{ Session::get('message') }}">
+          <input type="hidden" id="success" value="{{ Session::get('success') }}">
+          <input type="hidden" id="danger" value="{{ Session::get('danger') }}">
         <!-- begin: .tray-center -->
         <div class="tray tray-center">
 
@@ -199,7 +200,8 @@
 
       rules: {
         monto: {
-            required: true
+            required: true,
+            number: true
         },
         usuarios: {
             required: true
@@ -214,7 +216,8 @@
 
       messages: {
         monto: {
-          required: 'Ingrese el monto'
+          required: 'Ingrese el monto',
+          number: 'Ingrese un número válido'
         },
         usuarios: {
           required: 'Seleccione un usuario'
@@ -243,7 +246,7 @@
 
     });
 
-      if ($("#message").val()!='') {
+      if ($("#success").val()!='') {
 
           var Stacks = {
               stack_top_right: {
@@ -258,11 +261,34 @@
           // Create new Notification
           new PNotify({
               title: 'Aviso',
-              text: $("#message").val(),
+              text: $("#success").val(),
               shadow: "true",
               opacity: "1",
               addclass: "stack_top_right",
-              type: "success",
+              type: 'success',
+              stack: Stacks["stack_top_right"],
+              width: "350px",
+              delay: 1500
+          });
+      }else if ($("#danger").val()!='') {
+        var Stacks = {
+              stack_top_right: {
+                  "dir1": "down",
+                  "dir2": "left",
+                  "push": "top",
+                  "spacing1": 10,
+                  "spacing2": 10
+              }
+          }
+
+          // Create new Notification
+          new PNotify({
+              title: 'Aviso',
+              text: $("#danger").val(),
+              shadow: "true",
+              opacity: "1",
+              addclass: "stack_top_right",
+              type: 'danger',
               stack: Stacks["stack_top_right"],
               width: "350px",
               delay: 1500

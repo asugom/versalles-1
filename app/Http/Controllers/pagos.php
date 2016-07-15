@@ -31,7 +31,8 @@ class pagos extends Controller
      */
     public function create()
     {
-        if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2) {
+
+        if (\Auth::user()->id_role == 1 || \Auth::user()->id_role == 2) {
             
             $users = DB::select('SELECT id, homenumber, name FROM users WHERE id_role = 0 AND name <> "" ');
             $data = array();
@@ -41,9 +42,9 @@ class pagos extends Controller
             }
 
         }else{
-            $data = Auth::user()->id;
+            $data = \Auth::user()->id;
         }
-        return view('pagos.reg_saldo', ['usuarios'=>$data]);
+        return view('pagos.reg_pago', ['usuarios'=>$data]);
     }
 
     /**
@@ -62,35 +63,37 @@ class pagos extends Controller
 
             $id =  DB::table('pago')->insertGetId(
                 [
-                'pago_tipo_id'      => $request->tipo_id, 
+                'pago_tipo_id'      => $request->optradio,
                 'pago_concepto'     => $request->concepto,
+                'pago_concepto'     => $request->recibo,
                 'pago_fecha'        => $fecha,
                 'pago_usuario_id'   => $request->usuarios,
                 'pago_monto'        => $request->monto,
-                'pago_estado_id'    => $request->estado_id
+                'pago_estado_id'    => $request->estado_id,
+                'pago_usuario_reg'   => \Auth::user()->$id
                 ]
             );
 
-            $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
+            // $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
 
-            if ($saldo->count()) {
+            // if (count($saldo)) {
 
-                DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
+            //     DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
             
-            }else{
+            // }else{
                 
-                $id =  DB::table('saldo')->insertGetId([
-                    'saldo_usuario_id'   => $request->usuarios,
-                    'saldo_monto'        => $request->monto
-                ]);
+            //     $id =  DB::table('saldo')->insertGetId([
+            //         'saldo_id_usuario'   => $request->usuarios,
+            //         'saldo_monto'        => $request->monto
+            //     ]);
             
-            }
+            // }
 
             DB::commit();
-            return redirect()->back()->withInput()->with('message','Saldo inicial registrado con éxito.');
+            return redirect()->back()->withInput()->with('success', 'Pago registrado con éxito.');
 
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withInput()->with('message', $e->errorInfo[2]);            
+            return redirect()->back()->withInput()->with('danger', $e->errorInfo[2]);            
         }
 
     }
@@ -184,31 +187,33 @@ class pagos extends Controller
                 'pago_fecha'        => $fecha,
                 'pago_usuario_id'   => $request->usuarios,
                 'pago_monto'        => $request->monto,
-                'pago_estado_id'    => $request->estado_id
+                'pago_estado_id'    => $request->estado_id,
+                'pago_usuario_reg'   => \Auth::user()->$id
                 ]
             );
 
             $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
 
-            if ($saldo->count()) {
+            if (count($saldo)) {
 
                 DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
             
             }else{
-                
+
                 $id =  DB::table('saldo')->insertGetId([
-                    'saldo_usuario_id'   => $request->usuarios,
+                    'saldo_id_usuario'   => $request->usuarios,
                     'saldo_monto'        => $request->monto
                 ]);
             
             }
 
             DB::commit();
-            return redirect()->back()->withInput()->with('message','Saldo inicial registrado con éxito.');
+            return redirect()->back()->withInput()-with('success','Saldo inicial registrado con éxito.');
 
         } catch (\Illuminate\Database\QueryException $e) {
+
             DB::rollBack();
-            return redirect()->back()->withInput()->with('message',$e->errorInfo[2]);
+            return redirect()->back()->withInput()->with('danger', $e->errorInfo[2]);
 
         }
 
