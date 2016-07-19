@@ -58,8 +58,8 @@
                               <span>Seleccione el tipo de pago realizado</span>
                           </div>
                         	<div class="option-group field">
-            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" >Transferencia</label>
-            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" >Depósito</label>
+            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" value="2" >Transferencia</label>
+            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" value="3" >Depósito</label>
             							</div>
                        
                           <div class="section-divider mv40" id="spy4">

@@ -22,6 +22,35 @@ class pagos extends Controller
     public function index()
     {
         //
+        if (\Auth::user()->id_role == 1 || \Auth::user()->id_role == 2) {
+            $pagos = DB::table('pago')->join('users', 'pago.pago_usuario_id', '=', 'users.id')
+                                      ->join('lotes', 'users.cod_lote', '=', 'lotes.id')
+                                      ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
+                                      // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
+                                      ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo')
+                                      ->where('pago_estado_id', '=', '1')->get();
+
+            $data = array();
+            $result = array();
+            if (is_array($pagos)) {
+                foreach ($pagos as $value) {
+                    $data[] = ['nombre' => $value->nombre,
+                    'numero' => $value->numero,
+                    'fecha' => $value->fecha,
+                    'concepto' => $value->concepto,
+                    'recibo' => $value->recibo,
+                    'monto' => $value->monto,
+                    'tipo' => $value->tipo ];
+                }
+
+                if (is_array($data)) {
+                    $result = array('data' => $data);
+                    print_r(json_encode($result));
+                    die;
+                }
+            }
+            
+        }
     }
 
     /**
@@ -65,29 +94,15 @@ class pagos extends Controller
                 [
                 'pago_tipo_id'      => $request->optradio,
                 'pago_concepto'     => $request->concepto,
-                'pago_concepto'     => $request->recibo,
+                'pago_numero'       => $request->recibo,
                 'pago_fecha'        => $fecha,
                 'pago_usuario_id'   => $request->usuarios,
                 'pago_monto'        => $request->monto,
                 'pago_estado_id'    => $request->estado_id,
-                'pago_usuario_reg'   => \Auth::user()->$id
+                'pago_usuario_reg'   => \Auth::user()->id
                 ]
             );
 
-            // $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
-
-            // if (count($saldo)) {
-
-            //     DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
-            
-            // }else{
-                
-            //     $id =  DB::table('saldo')->insertGetId([
-            //         'saldo_id_usuario'   => $request->usuarios,
-            //         'saldo_monto'        => $request->monto
-            //     ]);
-            
-            // }
 
             DB::commit();
             return redirect()->back()->withInput()->with('success', 'Pago registrado con éxito.');
@@ -146,6 +161,7 @@ class pagos extends Controller
 
     public function listar()
     {
+        return view('pagos.ver_pago');
     }
 
     /**
@@ -188,7 +204,7 @@ class pagos extends Controller
                 'pago_usuario_id'   => $request->usuarios,
                 'pago_monto'        => $request->monto,
                 'pago_estado_id'    => $request->estado_id,
-                'pago_usuario_reg'   => \Auth::user()->$id
+                'pago_usuario_reg'   => \Auth::user()->id
                 ]
             );
 
@@ -208,7 +224,7 @@ class pagos extends Controller
             }
 
             DB::commit();
-            return redirect()->back()->withInput()-with('success','Saldo inicial registrado con éxito.');
+            return redirect()->back()->withInput()->with('success','Saldo inicial registrado con éxito.');
 
         } catch (\Illuminate\Database\QueryException $e) {
 

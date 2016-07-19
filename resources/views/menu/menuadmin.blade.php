@@ -55,6 +55,11 @@
                 </a>
               </li>
               <li>
+                <a href="{{ route('ver_pago') }}">
+                  <span class="fa fa-search"></span>Ver pagos
+                </a>
+              </li>
+              <li>
                 <a href="{{ route('registrar_saldo') }}">
                   <span class="fa fa-money"></span>Registrar saldo inicial
                 </a>
