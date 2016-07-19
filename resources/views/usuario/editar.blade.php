@@ -104,6 +104,31 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="section">
+                        <label class="field prepend-icon">
+                          {!! Form::text('emailalt_1', null, array('class' => 'gui-input','placeholder'=>'Email alternativo 1')) !!}
+
+                          <label for="email" class="field-icon">
+                            <i class="fa fa-envelope"></i>
+                          </label>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="section">
+                        <label class="field prepend-icon">
+                          {!! Form::text('emailalt_2', null, array('class' => 'gui-input','placeholder'=>'Email alternativo 2')) !!}
+
+                          <label for="email" class="field-icon">
+                            <i class="fa fa-envelope"></i>
+                          </label>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
                     <div class="row">
                     <button type="submit" class="button btn-primary mr10 pull-right">Cambiar datos</button>
                     </div>
@@ -202,7 +227,12 @@
           required: true,
           email: true
         },
-
+        emailalt_1: {
+          email: true
+        },
+        emailalt_2: {
+          email: true
+        },
         password: {
           required: true,
           minlength: 6,
@@ -229,6 +259,12 @@
         },
         useremail: {
           required: 'Introduzca un correo valido',
+          email: 'Introduzca un correo valido'
+        },
+        emailalt_1: {
+          email: 'Introduzca un correo valido'
+        },
+         emailalt_2: {
           email: 'Introduzca un correo valido'
         },
         password: {

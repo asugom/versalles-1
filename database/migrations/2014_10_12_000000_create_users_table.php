@@ -20,6 +20,8 @@ class CreateUsersTable extends Migration
             $table->string('mobilenumber');
             $table->string('phonenumber');
             $table->string('homenumber');
+            $table->string('emailalt_1');
+            $table->string('emailalt_2');
             $table->rememberToken();
             $table->timestamps();
         });

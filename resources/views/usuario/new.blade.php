@@ -106,6 +106,32 @@
                               </div>
                           </div>
                       </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="section">
+                          <label class="field prepend-icon">
+                          {!! Form::text('emailalt_1', null, array('class' => 'gui-input','placeholder'=>'Email alternativo 1')) !!}
+
+                          <label for="email" class="field-icon">
+                            <i class="fa fa-envelope"></i>
+                          </label>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="section">
+                        <label class="field prepend-icon">
+                          {!! Form::text('emailalt_2', null, array('class' => 'gui-input','placeholder'=>'Email alternativo 2')) !!}
+
+                          <label for="email" class="field-icon">
+                            <i class="fa fa-envelope"></i>
+                          </label>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
 					<div class="section-divider mv40" id="spy4">
                       <span> Contraseña </span>
                     </div>
@@ -223,6 +249,12 @@
         homenumber: {
           required: true
         },
+        emailalt_1: {
+          email: true
+        },
+        emailalt_2: {
+          email: true
+        },
         password: {
           required: true,
           minlength: 6,
@@ -248,6 +280,12 @@
         email: {
           required: 'Enter email address',
           email: 'Enter a VALID email address'
+        },
+        emailalt_1: {
+          email: 'Introduzca un correo valido'
+        },
+        emailalt_2: {
+          email: 'Introduzca un correo valido'
         },
         mobilenumber: {
           require_from_group: 'Fill at least a mobile contact'
