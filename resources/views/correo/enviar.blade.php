@@ -68,12 +68,21 @@
                                   <textarea class="summernote" name="texto"></textarea>
                               </div>
                           </div>
-                        <div class="row">
-                            <div class="col-md-12">
+
+                        <div class="row mb10">
+                            <div class="col-md-6" >
+                                <button type="button" id="add_opcion" class="button btn-primary  pull-left">Agregar Adjunto</button>
+                            </div>
+                        </div>
+                        <fieldset id="opciones">
+                            <legend>Archivos Adjuntos</legend>
+                        </fieldset>
+                       <!-- <div class="row">
+                            <div class="col-md-8">
                                 <div class="section">
                                     <label class="field prepend-icon append-button file">
                                         <span class="button btn-primary">Choose File</span>
-                                        <input class="gui-file" name="file1" id="file1" onchange="document.getElementById('uploader1').value = this.value;" type="file">
+                                        <input class="gui-file" name="file1[]" id="file1" onchange="document.getElementById('uploader1').value = this.value;" type="file">
                                         <input class="gui-input" id="uploader1" placeholder="Please Select A File" type="text">
                                         <label class="field-icon">
                                             <i class="fa fa-upload"></i>
@@ -81,9 +90,11 @@
                                     </label>
                                 </div>
                             </div>
-
                         </div>
+                        -->
+
                         <button type="submit" class="button btn-primary mr10 pull-right">Enviar correo</button>
+
                     {!! Form::close() !!}
                 </div>
               </div>
@@ -159,10 +170,45 @@
   jQuery(document).ready(function() {
 
       "use strict";
-      // Init Demo JS
-      Demo.init();
-      // Init Theme Core
-      Core.init();
+
+      var intId=0;
+
+      $('body').on('change', $('[id^=file]'), function() {
+          var fsize = 0;
+          $.each( $('[id^=file]'), function( key, value ) {
+              fsize=$("#"+value.id)[0].files[0].size;
+          });
+          if (fsize>16000000){
+              $("#"+event.target.id).parent().parent().parent().parent().remove();
+              alert("Los archivos exceden el tamaño maximo permitido");
+          }
+
+      });
+
+      $("#add_opcion").click(function() {
+              intId = intId + 1;
+              var fieldWrapper = $( "<div class='row'>"+
+                    "<div class='col-md-8'>"+
+                        "<div class='section'>"+
+                            "<label class='field prepend-icon append-button file'>"+
+                                "<span class='button btn-primary'>Choose File</span>"+
+                                '<input class="gui-file" name="file1[]" id="file'+intId+'" onchange="document.getElementById(\'uploader'+intId+'\').value = this.value;" type="file">'+
+
+                                "<input class='gui-input' id='uploader"+intId+"' placeholder='Seleccione un archivo' type='text'>"+
+                                "<label class='field-icon'>"+
+                                    "<i class='fa fa-upload'></i>"+
+                                "</label>"+
+                            "</label>"+
+                        "</div>"+
+                    "</div>"+
+                      "<div class='col-md-2' >" +
+                      "<button type='button' id='rem_opcion' onclick='$(this).parent().parent().remove()' class='button btn-primary mr10 pull-left'>-</button>" +
+                      "</div>" +
+                  "</div>");
+
+
+              $("#opciones").append(fieldWrapper);
+      });
 
       // Init Summernote Plugin
       $('.summernote').summernote({
@@ -198,6 +244,7 @@
             required:true,
             minlength:8
         }
+
       },
 
       /* @validation error messages 

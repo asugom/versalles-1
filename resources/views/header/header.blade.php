@@ -8,7 +8,7 @@
 
       <ul class="nav navbar-nav navbar-right">
         @if(Auth::user()->inquilino==0)
-          <li class="dropdown menu-merge">
+          <li class="dropdown menu-merge hidden">
             <div class="navbar-btn btn-group">
               <button class="btn btn-sm">
                 <span style="font-size:14px;color:red">Saldo en cuenta: 0.00 $</span>

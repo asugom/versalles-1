@@ -46,26 +46,32 @@ class correo extends Controller
      */
     public function store(Request $request)
     {
+
         $havfile=false;
-        $rutacompleta="";
+        $rutacompleta=null;
         if ($request->hasFile('file1')) {
             $havfile=true;
-            $nombre = date('s') . ($request->file1->getClientOriginalName());
-            $rutacompleta=public_path('adjuntos')."\\".$nombre;
-            \Storage::disk('local')->put($nombre, \File::get($request->file1));
+            foreach ($request->file1 as $file){
+                $nombre = date('s') . ($file->getClientOriginalName());
+                $rutacompleta[]=public_path('adjuntos')."/".$nombre;
+                \Storage::disk('local')->put($nombre, \File::get($file));
+            }
         }
 
-        //$emails = DB::table('users')->lists('email');
-        $emails=$this->val_correos(DB::table('users')->lists('email'));
+        $emails =$this->val_correos( DB::select("(SELECT email as email FROM users) UNION (SELECT emailalt_1 as email FROM users) UNION (SELECT emailalt_2 as email FROM users)"));
 
-		//$emails=["jcedeno@publired24.com","luciano@mundopcsa.com"];
+        //$emails=["jsifontes48@gmail.com","joselincedenno@gmail.com","jcedeno@publired24.com"];
+
        $r= Mail::send('mail.correo',$request->all(), function ($msj) use($emails, $rutacompleta,$havfile){
             $msj->subject('Correo de Condominio');
             //$msj->to($emails);
 			$msj->bcc($emails);
-            if ($havfile) $msj->attach($rutacompleta);
+           if ($havfile)
+                foreach ($rutacompleta as $ruta) {
+                    $msj->attach($ruta);
+                }
         });
-        
+
         if ($r){
             Session::flash('message','Correo Enviado con exito!!');
         }else
@@ -77,8 +83,8 @@ class correo extends Controller
 
     private function val_correos($correos){
         foreach ($correos as $correo) {
-            if (preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/',$correo)) {
-                $validados[]=$correo;
+            if (preg_match('/^[^0-9][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[@][a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,4}$/',$correo->email   )) {
+                $validados[]=$correo->email;
             }
         }
         return $validados;

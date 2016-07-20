@@ -9,10 +9,12 @@
 @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
   @include('menu.menuadmin', array('inicio'=>'active'))
 @else
-  @include('menu.menuuser', array('inicio'=>'active'))
+    @if (Auth::user()->inquilino == 0)
+        @include('menu.menuuser', array('inicio'=>'active'))
+    @else
+        @include('menu.menuinqui', array('inicio'=>'active'))
+    @endif
 @endif
-  
-  
 @endsection
 
 @section('wrapper')
@@ -261,7 +263,9 @@
                             <span class="panel-title"> Encuesta</span><b style="color: red; margin-left:30px"></b>
                         </div>
                       <div class="panel-body p10">
-                          @include('encuesta.encuesta')
+                          @if(count($data["encuesta"])>0 )
+                            @include('encuesta.encuesta')
+                          @endif
                       </div>
                     </div>
                  </div>
@@ -405,7 +409,7 @@
 
                           var arr = [];
                           $.each( data, function( key, value ) {
-                             arr.push([value.opcion,value.votos]); 
+                             arr.push([value.opcion,Number(value.votos)]); 
                           });
 
                           var chart = $('#high-pie2').highcharts();

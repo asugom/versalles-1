@@ -109,9 +109,9 @@
             </form>
           
             <!-- Registration Links -->
-            <div class=" panel-footer hidden">
+            <div class=" panel-footer ">
               <p>
-                <a href="{{ url('/password/reset') }}" class="active" title="Sign In">¿Olvidaste tu contraseña?</a>
+                <a href="{{ url('password/email') }}" class="active" title="Sign In">¿Olvidaste tu contraseña?</a>
               </p>
             </div>
           </div>

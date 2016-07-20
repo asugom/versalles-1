@@ -23,6 +23,7 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datatables/extensions/Editor/css/dataTables.editor.css') }}">
     <!-- Datatables ColReorder Addon CSS -->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css') }}">
+
     <!-- Start: Topbar -->
     <header id="topbar" class="alt" style=" min-height: 10px;padding: 10px 10px; ">
       <div class="topbar-left">
@@ -125,10 +126,8 @@
   <script src="{{ URL::asset('assets/js/demo/demo.js') }}"></script>
   <script src="{{ URL::asset('assets/js/main.js') }}"></script>
 
-  <!-- Theme Javascript -->
-  <script src="{{ URL::asset('assets/js/utility/utility.js') }}"></script>
-  <script src="{{ URL::asset('assets/js/demo/demo.js') }}"></script>
-  <script src="{{ URL::asset('assets/js/main.js') }}"></script>
+    <!-- PNotify -->
+  <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify.js') }}"></script>
 
   <script type="text/javascript">
 
@@ -142,7 +141,7 @@
 
     function format ( d ) {
       // `d` is the original data object for the row
-      return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+      return '<table id="tabla" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
           '<td class="fw600 pr10">Tipo de Pago:</td>'+
           '<td>'+d.tipo+'</td>'+
@@ -156,7 +155,7 @@
           '<td>'+d.recibo+'</td>'+
         '</tr>'+
         '<tr>'+
-          '<td><button type="button" id="aprobar" class="button btn-primary mr10 pull-left">Aprobar</button></td>'+
+          '<td><button type="button" id="aprobar" onclick="myFunction('+d.recibo+')" class="button btn-primary mr10 pull-left">Aprobar</button></td>'+
         '</tr>'+
       '</table>';
     }
@@ -198,14 +197,52 @@
         tr.addClass('shown');
       }
     });
-
-    $('#aprobar').click(function () {
-      // body...
-      console.log("evento");
-    });
-
-
+    
 
   });
+
+  function myFunction(recibo) {
+      // body...
+    // console.log(recibo);
+    // var stacks = {
+    //           stack_modal: {'dir1': "down", 
+    //           'dir2': "right", 
+    //           'push': "top", 
+    //           'modal': true, 
+    //           'overlay_close': true
+    //         }
+    //       }
+
+    new PNotify({
+      title: 'Aprobar pagos',
+      text: 'Aprobar el pago #'+recibo,
+      icon: 'glyphicon glyphicon-question-sign',
+      hide: false,
+      confirm: {
+          confirm: true
+      },
+      buttons: {
+          closer: false,
+          sticker: false
+      },
+      history: {
+          history: false
+      },
+      addclass: 'stack-modal',
+      stack: {
+          'dir1': 'down',
+          'dir2': 'right',
+          'modal': true,
+          'overlay_close': true
+      }
+    }).get().on('pnotify.confirm', function(){
+        alert('Ok, cool.');
+    }).on('pnotify.cancel', function(){
+        alert('Oh ok. Chicken, I see.');
+    });
+  }
+
+  
+
   </script>
 @endsection

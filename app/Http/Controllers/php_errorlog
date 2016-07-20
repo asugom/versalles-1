@@ -9,5 +9,3 @@
 [04-Jul-2016 16:32:03 CST6CDT] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/hostin88/public_html/versalles1.com/app/Http/Controllers/encuestas.php on line 10
 [04-Jul-2016 16:32:04 CST6CDT] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/hostin88/public_html/versalles1.com/app/Http/Controllers/pagos.php on line 10
 [04-Jul-2016 16:32:04 CST6CDT] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/hostin88/public_html/versalles1.com/app/Http/Controllers/servicios.php on line 10
-[12-Jul-2016 17:12:46 CST6CDT] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/hostin88/public_html/versalles1.com/app/Http/Controllers/encuestas.php on line 10
-[12-Jul-2016 17:14:22 CST6CDT] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/hostin88/public_html/versalles1.com/app/Http/Controllers/pagos.php on line 10

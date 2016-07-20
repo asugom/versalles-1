@@ -42,7 +42,7 @@
 
               <div class="panel heading-border  panel-dark">
                 <div class="panel-body bg-light">
-                    {!! Form::open(array('route' => 'save_encuesta','method'=>'POST','id'=>'admin-form','files'=>'true')) !!}
+                    {!! Form::open(array('route' => 'save_encuesta','method'=>'POST','id'=>'admin-form')) !!}
                           <div class="section-divider mb40" id="spy1">
                               <span>Datos de la encuesta</span>
                           </div>

@@ -42,6 +42,7 @@ class encuestas extends Controller
     public function store(Request $request)
     {
         try{
+
             //desactiva las encuentas anteriores; estatus=0
             \DB::table('encuesta')->update(['estatus' => 0]);
             //ingresa la nueva activa

@@ -9,7 +9,11 @@
     @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
         @include('menu.menuadmin', array('servicios'=>'active'))
     @else
-        @include('menu.menuuser', array('servicios'=>'active'))
+        @if (Auth::user()->inquilino == 0)
+            @include('menu.menuuser', array('servicios'=>'active'))
+        @else
+            @include('menu.menuinqui', array('servicios'=>'active'))
+        @endif
     @endif
 @endsection
 
