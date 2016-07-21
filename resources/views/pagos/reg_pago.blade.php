@@ -58,8 +58,11 @@
                               <span>Seleccione el tipo de pago realizado</span>
                           </div>
                         	<div class="option-group field">
-            							  <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" >Transferencia</label>
-            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" >Depósito</label>
+                            @foreach($tipos as $tipo)
+                              <label class="radio-inline"><input type="radio" name="optradio" value="{{ $tipo->id }}" >{{ $tipo->name }}</label>
+                            @endforeach
+            							  <!-- <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" >Transferencia</label>
+            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" >Depósito</label> -->
             							</div>
                        
                           <div class="section-divider mv40" id="spy4">

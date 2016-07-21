@@ -70,7 +70,12 @@ class pagos extends Controller
         }else{
             $data = \Auth::user()->id;
         }
-        return view('pagos.reg_pago', ['usuarios'=>$data]);
+
+        $tipos = DB::table('pago_tipo')
+                    ->select('desc_tipo as name', 'id_tipo as id')
+                    ->where('desc_tipo', '<>', 'Registro Inicial')
+                    ->get();
+        return view('pagos.reg_pago', ['usuarios'=>$data, 'tipos'=>$tipos]);
     }
 
     /**

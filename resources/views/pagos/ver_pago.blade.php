@@ -23,6 +23,8 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datatables/extensions/Editor/css/dataTables.editor.css') }}">
     <!-- Datatables ColReorder Addon CSS -->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/animate/animate_2.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/pnotify/pnotify.custom.min.css') }}">
 
     <!-- Start: Topbar -->
     <header id="topbar" class="alt" style=" min-height: 10px;padding: 10px 10px; ">
@@ -127,10 +129,10 @@
   <script src="{{ URL::asset('assets/js/main.js') }}"></script>
 
     <!-- PNotify -->
-  <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify.js') }}"></script>
+  <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify.custom.min.js') }}"></script>
 
   <script type="text/javascript">
-
+  PNotify.prototype.options.styling = "bootstrap3";
   jQuery(document).ready(function() {
 
       "use strict";
@@ -219,8 +221,24 @@
       icon: 'glyphicon glyphicon-question-sign',
       hide: false,
       confirm: {
-          confirm: true
+          confirm: true,
+          buttons: [{
+            text: 'Aceptar',
+            addClass: 'btn-primary',
+            click: function(notice) {
+              notice.remove();
+              alert('Ok, cool.');
+            }
+          }, {
+            text: 'Cancelar',
+            addClass: 'btn-primary',
+            click: function(notice) {
+                notice.remove();
+                alert('Oh ok. Chicken, I see.');
+            }
+          }]
       },
+      
       buttons: {
           closer: false,
           sticker: false
@@ -231,15 +249,14 @@
       addclass: 'stack-modal',
       stack: {
           'dir1': 'down',
-          'dir2': 'right',
-          'modal': true,
-          'overlay_close': true
+          'dir2': 'right'
       }
-    }).get().on('pnotify.confirm', function(){
-        alert('Ok, cool.');
-    }).on('pnotify.cancel', function(){
-        alert('Oh ok. Chicken, I see.');
     });
+    // .get().on('pnotify.confirm', function(){
+    //     alert('Ok, cool.');
+    // }).on('pnotify.cancel', function(){
+    //     alert('Oh ok. Chicken, I see.');
+    // });
   }
 
   
