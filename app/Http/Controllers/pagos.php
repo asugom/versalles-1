@@ -26,7 +26,7 @@ class pagos extends Controller
                                       ->join('lotes', 'users.cod_lote', '=', 'lotes.id')
                                       ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
                                       // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
-                                      ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo')
+                                      ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo', 'pago.pago_id as id_pago')
                                       ->where('pago_estado_id', '=', '1')->get();
             $data = array();
             $result = array();
@@ -38,7 +38,8 @@ class pagos extends Controller
                     'concepto' => $value->concepto,
                     'recibo' => $value->recibo,
                     'monto' => $value->monto,
-                    'tipo' => $value->tipo ];
+                    'tipo' => $value->tipo,
+                    'id_pago' => $value->id_pago ];
                 }
                 if (is_array($data)) {
                     $result = array('data' => $data);

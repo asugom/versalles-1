@@ -157,7 +157,9 @@
           '<td>'+d.recibo+'</td>'+
         '</tr>'+
         '<tr>'+
-          '<td><button type="button" id="aprobar" onclick="myFunction('+d.recibo+')" class="button btn-primary mr10 pull-left">Aprobar</button></td>'+
+          '<td>'+
+          '<button type="button" id="aprobar" onclick="myFunction('+d.recibo+','+d.id_pago+')" class="button btn-primary mr10 pull-left">Aprobar</button>'+
+          '</td>'+
         '</tr>'+
       '</table>';
     }
@@ -203,17 +205,7 @@
 
   });
 
-  function myFunction(recibo) {
-      // body...
-    // console.log(recibo);
-    // var stacks = {
-    //           stack_modal: {'dir1': "down", 
-    //           'dir2': "right", 
-    //           'push': "top", 
-    //           'modal': true, 
-    //           'overlay_close': true
-    //         }
-    //       }
+  function myFunction(recibo, id) {
 
     new PNotify({
       title: 'Aprobar pagos',
@@ -227,7 +219,16 @@
             addClass: 'btn-primary',
             click: function(notice) {
               notice.remove();
-              alert('Ok, cool.');
+              var url   = ''; //{!! route('index_pago') !!}';
+              var post = {};
+              post.id  = id;
+              post.recibo = recibo;
+              // alert('Ok, cool.');
+              // type: "POST",
+              // $.ajax({
+              //   url: url,
+
+              // });
             }
           }, {
             text: 'Cancelar',
