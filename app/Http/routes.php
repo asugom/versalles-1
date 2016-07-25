@@ -88,6 +88,11 @@ Route::get('index_pago',[
     'as'=> 'index_pago'
 ]);
 
+Route::post('update_pago', [
+    'uses'=>'pagos@update',
+    'as'=> 'update_pago'
+]);
+
 //pagos -> saldo inicial
 Route::get('registrar_saldo',[
     'uses'=>'pagos@inicial',

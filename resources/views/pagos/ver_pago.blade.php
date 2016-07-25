@@ -44,7 +44,7 @@
           <input type="hidden" id="danger" value="{{ Session::get('danger') }}">
       <!-- Begin: Content -->
       <section id="content" class="table-layout animated fadeIn">
-          
+          <input type="hidden" name="_token" value="{{ Session::token() }}">
         <!-- begin: .tray-center -->
         <div class="tray tray-center" style="width: 100%;">
           <div class="col-md-12">
@@ -219,23 +219,31 @@
             addClass: 'btn-primary',
             click: function(notice) {
               notice.remove();
-              var url   = ''; //{!! route('index_pago') !!}';
+              var url   = '{!! route('update_pago') !!}';
               var post = {};
               post.id  = id;
-              post.recibo = recibo;
-              // alert('Ok, cool.');
-              // type: "POST",
-              // $.ajax({
-              //   url: url,
+              post.opt = '1';
 
-              // });
+              $.ajax({
+                url: url,
+                type: "POST",
+                data: {'id': post.id, 'opt': post.opt, '_token': $('input[name=_token]').val()},
+                success: function(data){
+
+                // new PNotify({
+                //     title: 'Operación realizada.',
+                //     text: data.msg,
+                //     type: data.type
+                // });
+                console.log(data);
+                }
+              });
             }
           }, {
             text: 'Cancelar',
             addClass: 'btn-primary',
             click: function(notice) {
                 notice.remove();
-                alert('Oh ok. Chicken, I see.');
             }
           }]
       },

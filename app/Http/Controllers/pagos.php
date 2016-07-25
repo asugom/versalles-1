@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Input;
 use DB;
 use App\Http\Requests;
 use App\User;
@@ -143,11 +144,52 @@ class pagos extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+        // if ( Session::token() !== Input::get( '_token' ) ) {
+        //     return Response::json( array(
+        //         'msg' => 'Unauthorized attempt to create setting',
+        //         'state' => 'danger'
+        //     ) );
+        // }
+
+        switch (Input::get('opt')) {
+        case '1':
+            // Aprobar
+            try {
+
+                $aprobado = DB::table('pago_estado')
+                    ->select('pago_estado.id_estado as estado')
+                    ->where('desc_estado', '=', 'Aprobado')
+                    ->first();
+
+                $pago = DB::table('pago')
+                    ->select('pago_usuario_id as usuario', 'pago_monto as monto')
+                    ->where('pago_id', '=', Input::get('id'))
+                    ->first();
+
+                DB::table('pago')
+                    ->where('pago_id', Input::get('id'))
+                    ->update('pago_estado_id', $aprobado->estado);                
+
+                DB::table('saldo')
+                    ->where('saldo_id_usuario', $pago->usuario)
+                    ->increment('saldo_monto', $pago->monto);
+
+                return response()->json(array('msg'=>'Pago aprobado con éxito.', 'type'=>'success', 200));
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                return response()->json(array('msg'=> $e->errorInfo[2], 'type'=> 'danger', 200));
+            }
+
+            break;
+        
+        default:
+            return response()->json(array('msg'=>'Ninguna operación realziada', 'type'=>'success', 200));
+            break;
+        }        
 
     }
 
