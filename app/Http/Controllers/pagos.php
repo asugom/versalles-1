@@ -148,12 +148,12 @@ class pagos extends Controller
      */
     public function update(Request $request)
     {
-        // if ( Session::token() !== Input::get( '_token' ) ) {
-        //     return Response::json( array(
-        //         'msg' => 'Unauthorized attempt to create setting',
-        //         'state' => 'danger'
-        //     ) );
-        // }
+        if ( Session::token() !== Input::get( '_token' ) ) {
+            return Response::json( array(
+                'msg' => 'Unauthorized attempt to create setting',
+                'type' => 'danger'
+            ) );
+        }
 
         switch (Input::get('opt')) {
         case '1':
@@ -170,13 +170,17 @@ class pagos extends Controller
                     ->where('pago_id', '=', Input::get('id'))
                     ->first();
 
-                DB::table('pago')
-                    ->where('pago_id', Input::get('id'))
-                    ->update('pago_estado_id', $aprobado->estado);                
+                DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $aprobado->estado]);
 
-                DB::table('saldo')
-                    ->where('saldo_id_usuario', $pago->usuario)
-                    ->increment('saldo_monto', $pago->monto);
+                $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
+                if (count($saldo)) {
+                    DB::table('saldo')->where('saldo_id_usuario', $pago->usuario)->increment('saldo_monto', $pago->monto);
+                }else{
+                    $id =  DB::table('saldo')->insertGetId([
+                        'saldo_id_usuario'   => $pago->usuario,
+                        'saldo_monto'        => $pago->monto
+                    ]);
+                }                
 
                 return response()->json(array('msg'=>'Pago aprobado con éxito.', 'type'=>'success', 200));
 
@@ -185,9 +189,40 @@ class pagos extends Controller
             }
 
             break;
-        
+        case '2':
+          try {
+//            Rechazar
+            $rechazado= DB::table('pago_estado')
+              ->select('pago_estado.id_estado as estado')
+              ->where('desc_estado', '=', 'Rechazado')
+              ->first();
+
+            DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $rechazado->estado]);
+            return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'info', 200));
+
+          } catch (\Illuminate\Database\QueryException $e) {
+                return response()->json(array('msg'=> $e->errorInfo[2], 'type'=> 'danger', 200));
+          }
+          break;
+
+        case '3':
+          try {
+//          Aprobar con Mora
+            $rechazado= DB::table('pago_estado')
+              ->select('pago_estado.id_estado as estado')
+              ->where('desc_estado', '=', 'Rechazado')
+              ->first();
+
+            DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $rechazado->estado]);
+            return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'info', 200));
+
+          } catch (\Illuminate\Database\QueryException $e) {
+                return response()->json(array('msg'=> $e->errorInfo[2], 'type'=> 'danger', 200));
+          }
+          break;
+
         default:
-            return response()->json(array('msg'=>'Ninguna operación realziada', 'type'=>'success', 200));
+            return response()->json(array('msg'=>'Ninguna operación realizada', 'type'=>'success', 200));
             break;
         }        
 

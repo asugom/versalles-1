@@ -158,7 +158,9 @@
         '</tr>'+
         '<tr>'+
           '<td>'+
-          '<button type="button" id="aprobar" onclick="myFunction('+d.recibo+','+d.id_pago+')" class="button btn-primary mr10 pull-left">Aprobar</button>'+
+          '<button type="button" id="aprobar" onclick="myFunction('+d.recibo+','+d.id_pago+',1)" class="button btn-success mr10 pull-left">Aprobar</button>'+
+          '<button type="button" id="rechazar" onclick="myFunction('+d.recibo+','+d.id_pago+',2)" class="button btn-danger mr10 pull-left">Rechazar</button>'+
+          '<button type="button" id="aprobar_c" onclick="myFunction('+d.recibo+','+d.id_pago+',3)" class="button btn-danger mr10 pull-left">Aprobar con Mora</button>'+
           '</td>'+
         '</tr>'+
       '</table>';
@@ -205,11 +207,27 @@
 
   });
 
-  function myFunction(recibo, id) {
+  function myFunction(recibo, id, opt) {
+    var title = '';
+    var text = '';
+
+    switch (opt){
+      case 1: title = 'Aprobar pagos';
+              text = 'Aprobar el pago #'+recibo+'?';
+              break;
+      case 2: title= 'Rechazar pagos';
+              text = 'Rechazar el Pago #'+recibo+'?';
+              break;
+      case 3: title= 'Aprobar pago';
+              text = 'Aprobar el Pago #'+recibo+' y agregar deuda por mora?';
+              break;
+      default: title= '';
+               text = '';
+    }
 
     new PNotify({
-      title: 'Aprobar pagos',
-      text: 'Aprobar el pago #'+recibo,
+      title: title,
+      text: text,
       icon: 'glyphicon glyphicon-question-sign',
       hide: false,
       confirm: {
@@ -219,10 +237,10 @@
             addClass: 'btn-primary',
             click: function(notice) {
               notice.remove();
-              var url   = '{!! route('update_pago') !!}';
+              var url  = '{!! route('update_pago') !!}';
               var post = {};
               post.id  = id;
-              post.opt = '1';
+              post.opt = opt;
 
               $.ajax({
                 url: url,
@@ -230,11 +248,16 @@
                 data: {'id': post.id, 'opt': post.opt, '_token': $('input[name=_token]').val()},
                 success: function(data){
 
-                // new PNotify({
-                //     title: 'Operación realizada.',
-                //     text: data.msg,
-                //     type: data.type
-                // });
+                new PNotify({
+                    title: 'Resultado de la operación.',
+                    text: data.msg,
+                    type: data.type
+                });
+
+                currentSource = "{!! route('index_pago') !!}";
+                var table = $('#datatable9').DataTable();
+                table.ajax.url(currentSource).load();
+
                 console.log(data);
                 }
               });
