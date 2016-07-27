@@ -36,6 +36,7 @@
             </a>
           </li>
           <li class="crumb-trail">Ver recibos de pago</li>
+          
         </ol>
       </div>
     </header>
@@ -48,12 +49,23 @@
         <!-- begin: .tray-center -->
         <div class="tray tray-center" style="width: 100%;">
           <div class="col-md-12">
+            <div class="panel-body bg-light">
+              <div class="panel-heading">
+                <div class="panel-title">
+                  <span class="glyphicon glyphicon-tasks"></span>Listado de pagos registrados</div>
+                </div>
+              <div class="option-group field">
+                @foreach($estado as $value)
+                  <label class="radio-inline"><input type="radio" name="optradio" value="{{ $value->id }}" >{{ $value->name }}</label>
+                @endforeach
+              </div>
+            </div>
             <div class="panel panel-visible" id="spy2">
-                <div class="panel-heading">
+                <!-- <div class="panel-heading">
                     <div class="panel-title hidden-xs">
                         <span class="glyphicon glyphicon-tasks"></span>Listado de pagos pendientes registrados
                     </div>
-                </div>
+                </div> -->
 
                 <div class="panel-body pn">
                     <table class="table table-hover" id="datatable9" cellspacing="0" width="100%">
@@ -135,12 +147,13 @@
   PNotify.prototype.options.styling = "bootstrap3";
   jQuery(document).ready(function() {
 
-      "use strict";
-      // Init Demo JS
-      Demo.init();
-      // Init Theme Core
-      Core.init();
-
+    "use strict";
+    // Init Demo JS
+    Demo.init();
+    // Init Theme Core
+    Core.init();
+    $('input[type=radio][name=optradio]').filter('[value=1]').prop('checked', true);
+      
     function format ( d ) {
       // `d` is the original data object for the row
       return '<table id="tabla" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
@@ -158,17 +171,23 @@
         '</tr>'+
         '<tr>'+
           '<td>'+
+          (($('input[type=radio][name=optradio]:checked').val() == 1) ?
           '<button type="button" id="aprobar" onclick="myFunction('+d.recibo+','+d.id_pago+',1)" class="button btn-success mr10 pull-left">Aprobar</button>'+
-          '<button type="button" id="rechazar" onclick="myFunction('+d.recibo+','+d.id_pago+',2)" class="button btn-danger mr10 pull-left">Rechazar</button>'+
-          '<button type="button" id="aprobar_c" onclick="myFunction('+d.recibo+','+d.id_pago+',3)" class="button btn-danger mr10 pull-left">Aprobar con Mora</button>'+
-          '</td>'+
+          '<button type="button" id="rechazar" onclick="myFunction('+d.recibo+','+d.id_pago+',2)" class="button btn-danger mr10 pull-left">Rechazar</button>'
+          : '')
+          // '<button type="button" id="aprobar_c" onclick="myFunction('+d.recibo+','+d.id_pago+',3)" class="button btn-warning mr10 pull-left">Aprobar con Mora</button>'+
+          +'</td>'+
         '</tr>'+
       '</table>';
     }
 
       var table = $('#datatable9').DataTable({
       "sDom": 'Rt<"dt-panelfooter clearfix"ip>',
-      "ajax": '{!! route('index_pago') !!}',
+      // "ajax": '{!! route('index_pago') !!}',
+      "ajax": {
+              "url": "{!! route('index_pago') !!}",
+              "data": { "estado": 1 }
+      },
       "columns": [
         {
           "className":      'details-control',
@@ -203,6 +222,35 @@
         tr.addClass('shown');
       }
     });
+
+    $('input[type=radio][name=optradio]').change(function () {
+      var dato = this.value;
+      table.destroy();
+      table = $('#datatable9').DataTable({
+        "sDom": 'Rt<"dt-panelfooter clearfix"ip>',
+        // "ajax": '{!! route('index_pago') !!}',
+        "ajax": {
+                "url": "{!! route('index_pago') !!}",
+                "data": { "estado": this.value }
+        },
+        "columns": [
+          {
+            "className":      'details-control',
+            "procesing":      true, 
+            "serverside":     true,
+            "orderable":      false,
+            "data":           null,
+            "defaultContent": ''
+          },
+          { "data": "nombre", name: "nombre"  },
+          { "data": "numero", name: "numero" },
+          { "data": "recibo", name: "recibo" },
+          { "data": "fecha", name: "fecha" },
+          { "data": "monto", name: "monto" }
+        ],
+        "order": [[1, 'asc']]
+      });
+    });
     
 
   });
@@ -218,9 +266,9 @@
       case 2: title= 'Rechazar pagos';
               text = 'Rechazar el Pago #'+recibo+'?';
               break;
-      case 3: title= 'Aprobar pago';
-              text = 'Aprobar el Pago #'+recibo+' y agregar deuda por mora?';
-              break;
+      // case 3: title= 'Aprobar pago';
+      //         text = 'Aprobar el Pago #'+recibo+' y agregar deuda por mora?';
+      //         break;
       default: title= '';
                text = '';
     }

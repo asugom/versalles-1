@@ -28,7 +28,7 @@ class pagos extends Controller
                                       ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
                                       // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
                                       ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo', 'pago.pago_id as id_pago')
-                                      ->where('pago_estado_id', '=', '1')->get();
+                                      ->where('pago_estado_id', '=', Input::get('estado'))->get();
             $data = array();
             $result = array();
             if (is_array($pagos)) {
@@ -76,6 +76,7 @@ class pagos extends Controller
         $tipos = DB::table('pago_tipo')
                     ->select('desc_tipo as name', 'id_tipo as id')
                     ->where('desc_tipo', '<>', 'Registro Inicial')
+                    ->where('tipo_tipo', '=', 0)
                     ->get();
         return view('pagos.reg_pago', ['usuarios'=>$data, 'tipos'=>$tipos]);
     }
@@ -148,12 +149,12 @@ class pagos extends Controller
      */
     public function update(Request $request)
     {
-        if ( Session::token() !== Input::get( '_token' ) ) {
-            return Response::json( array(
-                'msg' => 'Unauthorized attempt to create setting',
-                'type' => 'danger'
-            ) );
-        }
+        // if ( Session::token() !== Input::get( '_token' ) ) {
+        //     return Response::json( array(
+        //         'msg' => 'Unauthorized attempt to create setting',
+        //         'type' => 'danger'
+        //     ) );
+        // }
 
         switch (Input::get('opt')) {
         case '1':
@@ -172,7 +173,7 @@ class pagos extends Controller
 
                 DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $aprobado->estado]);
 
-                $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
+                $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $pago->usuario)->get();
                 if (count($saldo)) {
                     DB::table('saldo')->where('saldo_id_usuario', $pago->usuario)->increment('saldo_monto', $pago->monto);
                 }else{
@@ -196,25 +197,10 @@ class pagos extends Controller
               ->select('pago_estado.id_estado as estado')
               ->where('desc_estado', '=', 'Rechazado')
               ->first();
+            // return response()->json(array('msg'=> $rechazado->estado, 'type'=>'success', 200));
 
             DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $rechazado->estado]);
-            return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'info', 200));
-
-          } catch (\Illuminate\Database\QueryException $e) {
-                return response()->json(array('msg'=> $e->errorInfo[2], 'type'=> 'danger', 200));
-          }
-          break;
-
-        case '3':
-          try {
-//          Aprobar con Mora
-            $rechazado= DB::table('pago_estado')
-              ->select('pago_estado.id_estado as estado')
-              ->where('desc_estado', '=', 'Rechazado')
-              ->first();
-
-            DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $rechazado->estado]);
-            return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'info', 200));
+            return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'success', 200));
 
           } catch (\Illuminate\Database\QueryException $e) {
                 return response()->json(array('msg'=> $e->errorInfo[2], 'type'=> 'danger', 200));
@@ -222,7 +208,7 @@ class pagos extends Controller
           break;
 
         default:
-            return response()->json(array('msg'=>'Ninguna operación realizada', 'type'=>'success', 200));
+            return response()->json(array('msg'=>'Ninguna operación realizada', 'type'=>'info', 200));
             break;
         }        
 
@@ -241,7 +227,8 @@ class pagos extends Controller
 
     public function listar()
     {
-        return view('pagos.ver_pago');
+        $estado = DB::table('pago_estado')->select('id_estado as id', 'desc_estado as name')->get();
+        return view('pagos.ver_pago',['estado'=>$estado]);
     }
 
     /**
