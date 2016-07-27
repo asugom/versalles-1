@@ -38,6 +38,11 @@
                   <span class="fa fa-plus"></span>Registrar pago
                 </a>
               </li>
+              <li>
+                <a href="{{ route('ver_pago') }}">
+                  <span class="fa fa-search"></span>Ver pagos
+                </a>
+              </li>
             </ul>
           </li>
 		  <li class="{{ $servicios or '' }}">

@@ -24,33 +24,41 @@ class pagos extends Controller
     {
         if (\Auth::user()->id_role == 1 || \Auth::user()->id_role == 2) {
             $pagos = DB::table('pago')->join('users', 'pago.pago_usuario_id', '=', 'users.id')
-                                      ->join('lotes', 'users.cod_lote', '=', 'lotes.id')
-                                      ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
-                                      // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
-                                      ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo', 'pago.pago_id as id_pago')
-                                      ->where('pago_estado_id', '=', Input::get('estado'))->get();
-            $data = array();
-            $result = array();
-            if (is_array($pagos)) {
-                foreach ($pagos as $value) {
-                    $data[] = ['nombre' => $value->nombre,
-                    'numero' => $value->numero,
-                    'fecha' => $value->fecha,
-                    'concepto' => $value->concepto,
-                    'recibo' => $value->recibo,
-                    'monto' => $value->monto,
-                    'tipo' => $value->tipo,
-                    'id_pago' => $value->id_pago ];
-                }
-                if (is_array($data)) {
-                    $result = array('data' => $data);
-                    print_r(json_encode($result));
-                    die;
-                }
-            }
-            
+                ->join('lotes', 'users.cod_lote', '=', 'lotes.id')
+                ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
+                // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
+                ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo', 'pago.pago_id as id_pago')
+                ->where('pago_estado_id', '=', Input::get('estado'))->get();
+        }else{
+           $pagos = DB::table('pago')->join('users', 'pago.pago_usuario_id', '=', 'users.id')
+                ->join('lotes', 'users.cod_lote', '=', 'lotes.id')
+                ->join('pago_tipo', 'pago.pago_tipo_id', '=', 'pago_tipo.id_tipo')
+                // ->join('pago_estado', 'pago.pago_estado_id', '=', 'pago_estado.id_estado')
+                ->select('users.name as nombre', 'lotes.nombre as numero', 'pago.pago_fecha as fecha', 'pago.pago_concepto as concepto', 'pago.pago_monto as monto', 'pago.pago_numero as recibo', 'pago_tipo.desc_tipo as tipo', 'pago.pago_id as id_pago')
+                ->where('pago_estado_id', '=', Input::get('estado'))
+                ->where('users.id', '=', \Auth::user()->id)->get();
         }
-    }
+        
+        $data = array();
+        $result = array();
+        if (is_array($pagos)) {
+            foreach ($pagos as $value) {
+                $data[] = ['nombre' => $value->nombre,
+                'numero' => $value->numero,
+                'fecha' => $value->fecha,
+                'concepto' => $value->concepto,
+                'recibo' => $value->recibo,
+                'monto' => $value->monto,
+                'tipo' => $value->tipo,
+                'id_pago' => $value->id_pago ];
+            }
+            if (is_array($data)) {
+                $result = array('data' => $data);
+                print_r(json_encode($result));
+                die;
+            }
+        }
+}
 
     /**
      * Show the form for creating a new resource.
@@ -107,8 +115,17 @@ class pagos extends Controller
                     'pago_usuario_reg'   => \Auth::user()->id
                 ]
             );
-
-
+            if (\Auth::user()->id_role == 1 || \Auth::user()->id_role == 2) {
+              $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $request->usuarios)->get();
+              if (count($saldo)) {
+                  DB::table('saldo')->where('saldo_id_usuario', $request->usuarios)->increment('saldo_monto', $request->monto);
+              }else{
+                  $id =  DB::table('saldo')->insertGetId([
+                      'saldo_id_usuario'   => $request->usuarios,
+                      'saldo_monto'        => $request->monto
+                  ]);
+              }
+            }
             DB::commit();
             return redirect()->back()->withInput()->with('success', 'Pago registrado con éxito.');
 

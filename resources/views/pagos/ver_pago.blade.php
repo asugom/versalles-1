@@ -156,6 +156,7 @@
       
     function format ( d ) {
       // `d` is the original data object for the row
+      var role = "{{ (Auth::user()->id_role == 1 || Auth::user()->id_role == 2) ? true : false }}";
       return '<table id="tabla" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
           '<td class="fw600 pr10">Tipo de Pago:</td>'+
@@ -171,7 +172,7 @@
         '</tr>'+
         '<tr>'+
           '<td>'+
-          (($('input[type=radio][name=optradio]:checked').val() == 1) ?
+          (($('input[type=radio][name=optradio]:checked').val() == 1 && role == '1') ?
           '<button type="button" id="aprobar" onclick="myFunction('+d.recibo+','+d.id_pago+',1)" class="button btn-success mr10 pull-left">Aprobar</button>'+
           '<button type="button" id="rechazar" onclick="myFunction('+d.recibo+','+d.id_pago+',2)" class="button btn-danger mr10 pull-left">Rechazar</button>'
           : '')
