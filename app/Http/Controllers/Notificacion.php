@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Input;
+use DB;
+use App\User;
 
 class Notificacion extends Controller
 {
@@ -17,6 +20,8 @@ class Notificacion extends Controller
     public function index()
     {
         //
+        $data = DB::table('notificacion')->where('id_usuario', '=', $id)->where('visto', '=', 0)->get();
+        return response()->json(array('data'=> $data), 200);
     }
 
     /**
@@ -38,6 +43,18 @@ class Notificacion extends Controller
     public function store(Request $request)
     {
         //
+        try {
+            $id = DB::table('notificacion')->insertGetId([
+                'id_usuario'    =>  Input::get('id_usuario'),
+                'descripcion'   =>  Input::get('descripcion'),
+                'url'           =>  Input::get('url'),
+                'visto'         =>  0
+            ]);
+        return response()->json(array('id'=>$id, 200));
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(array('id'=> -1, 200));
+        }
     }
 
     /**
@@ -83,5 +100,10 @@ class Notificacion extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function leer()
+    {
+        DB::table('Notificacion')->where('id', '=', $id)->update(['visto'=>1]);
     }
 }

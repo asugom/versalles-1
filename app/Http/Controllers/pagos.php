@@ -8,6 +8,7 @@ use DB;
 use App\Http\Requests;
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Notificacion;
 
 class pagos extends Controller
 {

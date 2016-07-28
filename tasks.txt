@@ -1,0 +1,73 @@
+-	Al Aprobar se le enviará un correo al usuario con el saldo restante en caso que sea negativo.
+-   Al Rechazar se le permitirá al administrador que envíe un texto con la razón.
+-	Aprobar eliminando mora errónea:
+	1.	Agregar tabla con conceptos de pago y deuda
+	2. 	Agregar fecha de aprobación de pago
+	3.	Al aprobar, agregar un datepicker para la fecha de aprobación
+	4. 	Si el pago por Mensualidad fue aprobado antes del día de creación de mora y es igual o mayor a la deuda por Mensualidad buscar y eliminar la mora generada para el mes y actualizar el saldo.
+
+<div id="form_notice" style="display: none;">
+    <form class="pf-form pform_custom" action="" method="post">
+        <div class="pf-element pf-heading">
+            <h3 style="margin-top: 0;">Login to Continue</h3>
+            <p>Just an example.</p>
+        </div>
+        <div class="pf-element">
+            <label>
+                <span class="pf-label">Username</span>
+                <input class="pf-field form-control" type="text" name="username" />
+            </label>
+        </div>
+        <div class="pf-element">
+            <label>
+                <span class="pf-label">Password</span>
+                <input class="pf-field form-control" type="password" name="password" />
+            </label>
+        </div>
+        <div class="pf-element">
+            <label>
+                <span class="pf-label">Remember Me</span>
+                <span class="pf-note">Lasts for 2 weeks.</span>
+                <input class="pf-field" type="checkbox" name="remember" />
+            </label>
+        </div>
+        <div class="pf-element pf-buttons pf-centered">
+            <input class="pf-button btn btn-primary" type="submit" name="submit" value="Submit" />
+            <input class="pf-button btn btn-default" type="button" name="cancel" value="Cancel" />
+        </div>
+    </form>
+</div>
+
+var notice = new PNotify({
+    text: $('#form_notice').html(),
+    icon: false,
+    width: 'auto',
+    hide: false,
+    buttons: {
+        closer: false,
+        sticker: false
+    },
+    insert_brs: false
+});
+notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
+    notice.remove();
+}).submit(function() {
+    var username = $(this).find('input[name=username]').val();
+    if (!username) {
+        alert('Please provide a username.');
+        return false;
+    }
+    notice.update({
+        title: 'Welcome',
+        text: 'Successfully logged in as ' + username,
+        icon: true,
+        width: PNotify.prototype.options.width,
+        hide: true,
+        buttons: {
+            closer: true,
+            sticker: true
+        },
+        type: 'success'
+    });
+    return false;
+});
