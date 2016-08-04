@@ -71,3 +71,4 @@ notice.get().find('form.pf-form').on('click', '[name=cancel]', function() {
     });
     return false;
 });
+-- ALTER TABLE `pago` ADD `pago_fecha_aprob` DATE NULL , ADD `pago_user_aprob` INT(10) NULL ;

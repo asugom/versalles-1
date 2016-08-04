@@ -9,6 +9,7 @@ use App\Http\Requests;
 use App\User;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Notificacion;
+use App\Http\Controllers\correo;
 
 class pagos extends Controller
 {
@@ -167,13 +168,8 @@ class pagos extends Controller
      */
     public function update(Request $request)
     {
-        // if ( Session::token() !== Input::get( '_token' ) ) {
-        //     return Response::json( array(
-        //         'msg' => 'Unauthorized attempt to create setting',
-        //         'type' => 'danger'
-        //     ) );
-        // }
-
+ 
+      if (\Auth::user()->id_role == 1 || \Auth::user()->id_role == 2) {
         switch (Input::get('opt')) {
         case '1':
             // Aprobar
@@ -185,22 +181,39 @@ class pagos extends Controller
                     ->first();
 
                 $pago = DB::table('pago')
-                    ->select('pago_usuario_id as usuario', 'pago_monto as monto')
+                    ->select('pago_usuario_id as usuario', 'pago_monto as monto', 'pago_recibo as recibo')
                     ->where('pago_id', '=', Input::get('id'))
                     ->first();
+
+                $config = DB::table('configuracion')->first();
+                
+                $DateTime = \DateTime::createFromFormat('d/m/Y', Input::get('fecha'));
+                $fecha = $DateTime->format('Y-m-d'); //Fecha de Aprobación
 
                 DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $aprobado->estado]);
 
                 $saldo = DB::table('saldo')->where('saldo_id_usuario', '=', $pago->usuario)->get();
                 if (count($saldo)) {
                     DB::table('saldo')->where('saldo_id_usuario', $pago->usuario)->increment('saldo_monto', $pago->monto);
+                    $restante = $saldo->monto + $pago->monto;
                 }else{
                     $id =  DB::table('saldo')->insertGetId([
                         'saldo_id_usuario'   => $pago->usuario,
                         'saldo_monto'        => $pago->monto
                     ]);
-                }                
+                    $restante = $pago->monto;
+                }
+                
+                if ($restante < 0) {
+                  $mensaje = array(
+                    'titulo' => 'Pago Aprobado con saldo restante', 
+                    'texto' => 'Su pago #'.$pago->recibo.' por un monto de '.$pago->monto.
+                    ' fue aprobado satisfactoriamente pero aun conserva una deuda de: '.$restante.'<br />'
+                    .'Puede visualizar su deuda ingresando al sistema.');
 
+                  correo::enviarUsuario(Input::get('id'), $mensaje);
+                }
+                
                 return response()->json(array('msg'=>'Pago aprobado con éxito.', 'type'=>'success', 200));
 
             } catch (\Illuminate\Database\QueryException $e) {
@@ -218,6 +231,18 @@ class pagos extends Controller
             // return response()->json(array('msg'=> $rechazado->estado, 'type'=>'success', 200));
 
             DB::table('pago')->where('pago_id', Input::get('id'))->update(['pago_estado_id' => $rechazado->estado]);
+
+            $DateTime = \DateTime::createFromFormat('d/m/Y', Input::get('fecha'));
+            $fecha = $DateTime->format('Y-m-d'); //Fecha de Aprobación
+
+            $mensaje = array(
+              'titulo' => 'Pago Rechazado.', 
+              'texto' => 'Su pago #'.$pago->recibo.' por un monto de '.$pago->monto.
+              ' fue rechazado por las siguientes causas: <br />'
+              .Input::get('message'));
+
+            correo::enviarUsuario(Input::get('id'), $mensaje);
+
             return response()->json(array('msg'=>'Pago Rechazado.', 'type'=>'success', 200));
 
           } catch (\Illuminate\Database\QueryException $e) {
@@ -228,7 +253,8 @@ class pagos extends Controller
         default:
             return response()->json(array('msg'=>'Ninguna operación realizada', 'type'=>'info', 200));
             break;
-        }        
+        }
+      }      
 
     }
 

@@ -96,34 +96,23 @@
             </div>
           </div>
 
-          <div class="admin-form  theme-system" id="form_aprobar" style="display: none;">
-              <form id="pf-form" action="" method="post">
-                <h4 class="micro-header">Aprobar Pago</h4>
-                <div class="section-divider mv40" id="spy4">
-                    <span id="span_recibo">Aprobar el pago #</span>
+        </div>
+        <div id="form_notice" style="display: none;">
+            <form class="pf-form pform_custom" action="">
+                <div class="pf-element pf-heading">
+                    <h3 style="margin-top: 0;">Rechazar Pago</h3>
                 </div>
-                <div class= "row">
-                  <div class="col-md-6">
-                      <div class="section">
-                          <label class="field prepend-icon">
-                              <input type="text" name="fecha" id="fecha" class="gui-input" placeholder="Fecha del Recibo">
-                              <label for="fecha" class="field-icon">
-                                  <i class="fa fa-calendar"></i>
-                              </label>
-                          </label>
-                      </div>
-                  </div>
+                <div class="pf-element">
+                    <label>
+                        <span class="pf-label">Username</span>
+                        <input class="pf-field form-control" type="text" name="username" />
+                    </label>
                 </div>
-                <div class="row">
-                  <!-- <div class="col-md-6"> -->
-                    <input class="btn-primary" type="submit" name="aprobar" value="Aprobar" />
-                    <input class="btn-default" type="button" name="cancelar" value="Cancelar" />
-                  <!-- </div> -->   
+                <div class="pf-element pf-buttons pf-centered">
+                    <input class="pf-button btn btn-primary" type="button" name="submit" value="Enviar" />
+                    <input class="pf-button btn btn-default" type="button" name="cancel" value="Cancelar" />
                 </div>
-                
-              </form>
-          </div>
-
+            </form>
         </div>
         <!-- end: .tray-center -->
 
@@ -148,14 +137,9 @@
 @endsection
 
 @section('scripts')
-  <link rel="stylesheet" type="text/css" href="vendor/plugins/datepicker/css/bootstrap-datetimepicker.css">
   <!-- jQuery -->
   <script src="{{ URL::asset('vendor/jquery/jquery-1.11.1.min.js') }}"></script>
   <script src="{{ URL::asset('vendor/jquery/jquery_ui/jquery-ui.min.js') }}"></script>
-    <!-- DateTime Plugin -->
-  <script src="{{ URL::asset('vendor/plugins/globalize/globalize.min.js') }}"></script>
-  <script src="{{ URL::asset('vendor/plugins/moment/moment.min.js') }}"></script>
-  <script src="{{ URL::asset('vendor/plugins/datepicker/js/bootstrap-datetimepicker.min.js') }}"></script>
 
   <!-- Datatables -->
   <script src="{{ URL::asset('vendor/plugins/datatables/media/js/jquery.dataTables.js') }}"></script>
@@ -185,24 +169,10 @@
     Demo.init();
     // Init Theme Core
     Core.init();
-    
-    $('#fecha').datetimepicker({
-          format: 'DD/MM/YYYY',
-          pickTime: false
-    });
-    var d = new Date();
-    var month = d.getMonth()+1;
-    var day = d.getDate();
-    var output = ((''+day).length<2 ? '0' : '') + day + '/' +
-    ((''+month).length<2 ? '0' : '') + month + '/' +
-    d.getFullYear();
-    $('#fecha').val(output);
-
-
     $('input[type=radio][name=optradio]').filter('[value=1]').prop('checked', true);
       
     function format ( d ) {
-      // `d` is the original data object for the row
+      // `d` data object
       var role = "{{ (Auth::user()->id_role == 1 || Auth::user()->id_role == 2) ? true : false }}";
       return '<table id="tabla" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
@@ -307,150 +277,12 @@
     var title = '';
     var text = '';
 
-
     switch (opt){
-      case 1: 
-              texto = '<span id="span_recibo">Aprobar el pago #'+recibo+'</span>';
-              $('#span_recibo').remove();
-              $('#spy4').append(texto);
-              var notice = new PNotify({
-                text: $('#form_aprobar').html(),
-                icon: false,
-                width: 'auto',
-                hide: false,
-                buttons: {
-                    closer: false,
-                    sticker: false
-                },
-                insert_brs: false,
-                history: {
-                    history: false
-                },
-                addclass: 'stack-modal',
-                modal: true,
-                stack: {
-                    'dir1': 'down',
-                    'dir2': 'right'
-                }
-              });
-              notice.get().find('#pf-form').on('click', '[name=cancelar]', function() {
-                  notice.remove();
-              }).submit(function(event) {
-                event.preventDefault();
-                notice.remove();
-                
-                var post = {};
-                post.id = id;
-                post.opt = opt;
-                post.message = '';
-                post.date = $('#fecha').val();
-
-                // $.ajax({
-                //   url: url,
-                //   type: "POST",
-                //   data: {'id': post.id, 
-                //     'opt': post.opt, 
-                //     'date': post.date, 
-                //     'message': post.message, 
-                //     '_token': $('input[name=_token]').val()
-                //   },
-                //   success: function(data){
-
-                //   new PNotify({
-                //       title: 'Resultado de la operación.',
-                //       text: data.msg,
-                //       type: data.type
-                //   });
-
-                //   currentSource = "{!! route('index_pago') !!}";
-                //   var table = $('#datatable9').DataTable();
-                //   table.ajax.url(currentSource).load();
-
-                //   console.log(data);
-                //   }
-                // });
-              });
+      case 1: title = 'Aprobar pagos';
+              text = 'Aprobar el pago #'+recibo+'?';
               break;
       case 2: title= 'Rechazar pagos';
               text = 'Rechazar el Pago #'+recibo+'?';
-              var d = new Date();
-              var month = d.getMonth()+1;
-              var day = d.getDate();
-              var output = ((''+day).length<2 ? '0' : '') + day + '/' +
-              ((''+month).length<2 ? '0' : '') + month + '/' +
-              d.getFullYear();
-
-            new PNotify({
-              title: title,
-              text: text,
-              icon: 'glyphicon glyphicon-question-sign',
-              hide: false,
-              confirm: {
-                  prompt: true,
-                  prompt_multi_line: true,
-                  prompt_default: 'Roses are red,\nViolets are blue,\n',
-                  buttons: [{
-                    text: 'Aceptar',
-                    addClass: 'btn-primary',
-                    click: function(notice, val) {
-                      notice.remove();
-                      var url  = '{!! route('update_pago') !!}';
-                      var post = {};
-                      post.id  = id;
-                      post.opt = opt;
-                      post.date = output;
-                      post.message = $('<div/>').text(val).html();
-                      console.log(post);
-                      // $.ajax({
-                      //   url: url,
-                      //   type: "POST",
-                      //   data: {'id': post.id, 
-                      //     'opt': post.opt, 
-                      //     'date': post.date, 
-                      //     'message': post.message, 
-                      //     '_token': $('input[name=_token]').val()
-                      //   },
-                      //   success: function(data){
-
-                      //   new PNotify({
-                      //       title: 'Resultado de la operación.',
-                      //       text: data.msg,
-                      //       type: data.type
-                      //   });
-
-                      //   currentSource = "{!! route('index_pago') !!}";
-                      //   var table = $('#datatable9').DataTable();
-                      //   table.ajax.url(currentSource).load();
-
-                      //   console.log(data);
-                      //   }
-                      // });
-                    }
-                  }, {
-                    text: 'Cancelar',
-                    addClass: 'btn-primary',
-                    click: function(notice) {
-                        notice.remove();
-                    }
-                  }]
-              },
-              
-              buttons: {
-                  closer: false,
-                  sticker: false
-              },
-              history: {
-                  history: false
-              },
-              addclass: 'stack-modal',
-              stack: {
-                  'dir1': 'down',
-                  'dir2': 'right'
-              }
-            });
-
-
-
               break;
       // case 3: title= 'Aprobar pago';
       //         text = 'Aprobar el Pago #'+recibo+' y agregar deuda por mora?';
@@ -459,7 +291,70 @@
                text = '';
     }
 
+    new PNotify({
+      title: title,
+      text: text,
+      icon: 'glyphicon glyphicon-question-sign',
+      hide: false,
+      confirm: {
+          confirm: true,
+          buttons: [{
+            text: 'Aceptar',
+            addClass: 'btn-primary',
+            click: function(notice) {
+              notice.remove();
+              var url  = '{!! route('update_pago') !!}';
+              var post = {};
+              post.id  = id;
+              post.opt = opt;
 
+              $.ajax({
+                url: url,
+                type: "POST",
+                data: {'id': post.id, 'opt': post.opt, '_token': $('input[name=_token]').val()},
+                success: function(data){
+
+                new PNotify({
+                    title: 'Resultado de la operación.',
+                    text: data.msg,
+                    type: data.type
+                });
+
+                currentSource = "{!! route('index_pago') !!}";
+                var table = $('#datatable9').DataTable();
+                table.ajax.url(currentSource).load();
+
+                console.log(data);
+                }
+              });
+            }
+          }, {
+            text: 'Cancelar',
+            addClass: 'btn-primary',
+            click: function(notice) {
+                notice.remove();
+            }
+          }]
+      },
+      
+      buttons: {
+          closer: false,
+          sticker: false
+      },
+      history: {
+          history: false
+      },
+      addclass: 'stack-modal',
+      stack: {
+          'dir1': 'down',
+          'dir2': 'right'
+      }
+    });
+    // .get().on('pnotify.confirm', function(){
+    //     alert('Ok, cool.');
+    // }).on('pnotify.cancel', function(){
+    //     alert('Oh ok. Chicken, I see.');
+    // });
   }
 
   
