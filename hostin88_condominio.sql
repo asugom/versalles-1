@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-07-2016 a las 06:03:56
+-- Tiempo de generación: 16-08-2016 a las 05:16:12
 -- Versión del servidor: 5.6.17
 -- Versión de PHP: 5.5.12
 
@@ -19,6 +19,61 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `hostin88_condominio`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `configuracion`
+--
+
+CREATE TABLE IF NOT EXISTS `configuracion` (
+  `conf_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `conf_monto_mens` decimal(13,2) unsigned NOT NULL,
+  `conf_dia_cobro` varchar(2) COLLATE utf8_unicode_ci NOT NULL DEFAULT '01',
+  `conf_porc_mora` decimal(13,2) unsigned NOT NULL,
+  `conf_dia_mora` varchar(2) COLLATE utf8_unicode_ci NOT NULL DEFAULT '10',
+  `conf_status` tinyint(2) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`conf_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `configuracion`
+--
+
+INSERT INTO `configuracion` (`conf_id`, `conf_monto_mens`, `conf_dia_cobro`, `conf_porc_mora`, `conf_dia_mora`, `conf_status`) VALUES
+(1, '210.00', '01', '20.00', '10', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `deuda`
+--
+
+CREATE TABLE IF NOT EXISTS `deuda` (
+  `deuda_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `deuda_tipo_id` int(11) NOT NULL,
+  `deuda_concepto` int(10) NOT NULL DEFAULT '0',
+  `deuda_ref` int(11) NOT NULL,
+  `deuda_usuario_id` int(11) NOT NULL,
+  `deuda_monto` decimal(13,2) NOT NULL,
+  `deuda_usuario_reg` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `deuda_otro_concepto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`deuda_id`),
+  KEY `deuda_deuda_tipo_id_index` (`deuda_tipo_id`),
+  KEY `deuda_deuda_usuario_id_index` (`deuda_usuario_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `deuda`
+--
+
+INSERT INTO `deuda` (`deuda_id`, `deuda_tipo_id`, `deuda_concepto`, `deuda_ref`, `deuda_usuario_id`, `deuda_monto`, `deuda_usuario_reg`, `created_at`, `updated_at`, `deuda_otro_concepto`) VALUES
+(1, 0, 6, 0, 14, '15.00', 2, '2016-08-11 03:41:58', NULL, 'Bombillos de la cancha'),
+(2, 0, 3, 0, 14, '210.00', 2, '2016-08-11 03:43:33', NULL, ''),
+(3, 0, 3, 0, 14, '210.00', 2, '2016-08-11 03:49:20', NULL, ''),
+(4, 0, 6, 0, 14, '10.00', 2, '2016-08-11 03:50:05', NULL, 'Reparación de cerca eléctrica');
 
 -- --------------------------------------------------------
 
@@ -39,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `encuesta` (
 --
 
 INSERT INTO `encuesta` (`id`, `pregunta`, `creado`, `estatus`) VALUES
-(0, '¿Qué te parece el sistema de condominio?', '2016-07-13 03:33:33', 0);
+(0, '¿Qué te parece el sistema de condominio?', '2016-07-13 03:33:33', 1);
 
 -- --------------------------------------------------------
 
@@ -83,7 +138,8 @@ CREATE TABLE IF NOT EXISTS `encuesta_votos` (
 --
 
 INSERT INTO `encuesta_votos` (`cod_usuario`, `cod_opcion`, `fecha`) VALUES
-(328, 0, '2016-07-13 06:50:07');
+(328, 0, '2016-07-13 06:50:07'),
+(2, 1, '2016-07-21 04:03:42');
 
 -- --------------------------------------------------------
 
@@ -464,7 +520,40 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('2014_10_12_000000_create_users_table', 1),
 ('2014_10_12_100000_create_password_resets_table', 1),
 ('2016_06_07_011819_create_galleries_table', 2),
-('2016_06_09_050846_alter_users_table', 3);
+('2016_06_09_050846_alter_users_table', 3),
+('2016_07_27_142139_create_deuda_table', 4),
+('2016_07_27_153443_add_tipo_tipo_to_pago_tipo_table', 4),
+('2016_07_28_024214_create_notifications_table', 5),
+('2016_08_03_220524_create_configuracion_table', 6),
+('2016_08_03_222100_create_pago_concepto_table', 6);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notificacion`
+--
+
+CREATE TABLE IF NOT EXISTS `notificacion` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
+  `descripcion` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `visto` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `notificacion_id_usuario_index` (`id_usuario`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
+
+--
+-- Volcado de datos para la tabla `notificacion`
+--
+
+INSERT INTO `notificacion` (`id`, `id_usuario`, `descripcion`, `url`, `visto`, `created_at`, `updated_at`) VALUES
+(1, 2, 'Nueva cuenta por pagar registrada por: 15$', '/', 0, '2016-08-11 03:41:58', '2016-08-11 03:56:14'),
+(2, 2, 'Nueva cuenta por pagar registrada por: 210$', '/', 0, '2016-08-11 03:44:28', '2016-08-11 03:56:18'),
+(3, 2, 'Nueva cuenta por pagar registrada por: 210$', '/', 0, '2016-08-11 03:49:24', '2016-08-11 03:56:21'),
+(4, 2, 'Nueva cuenta por pagar registrada por: 10$', '/', 0, '2016-08-11 03:50:09', '2016-08-11 03:56:23');
 
 -- --------------------------------------------------------
 
@@ -475,33 +564,65 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 CREATE TABLE IF NOT EXISTS `pago` (
   `pago_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pago_tipo_id` int(10) NOT NULL,
-  `pago_concepto` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `pago_concepto` int(10) NOT NULL,
   `pago_numero` int(10) NOT NULL DEFAULT '0',
   `pago_fecha` date NOT NULL,
   `pago_usuario_id` int(10) NOT NULL,
   `pago_monto` decimal(13,2) NOT NULL,
   `pago_estado_id` int(10) NOT NULL,
   `pago_usuario_reg` int(10) DEFAULT NULL,
+  `pago_fecha_updat` date DEFAULT NULL,
+  `pago_user_updat` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`pago_id`),
   KEY `pago_tipo_id` (`pago_tipo_id`,`pago_numero`,`pago_usuario_id`,`pago_estado_id`),
   KEY `pago_usuario_reg` (`pago_usuario_reg`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Recibos de pago' AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Recibos de pago' AUTO_INCREMENT=24 ;
 
 --
 -- Volcado de datos para la tabla `pago`
 --
 
-INSERT INTO `pago` (`pago_id`, `pago_tipo_id`, `pago_concepto`, `pago_numero`, `pago_fecha`, `pago_usuario_id`, `pago_monto`, `pago_estado_id`, `pago_usuario_reg`) VALUES
-(2, 1, 'Registro de saldo inicial', 0, '2016-07-15', 44, '2500.00', 2, NULL),
-(5, 1, 'Registro de saldo inicial', 0, '2016-07-15', 44, '1000.00', 2, NULL),
-(11, 1, 'Registro de saldo inicial', 0, '2016-07-15', 23, '1500.60', 2, NULL),
-(12, 1, 'Registro de saldo inicial', 0, '2016-07-15', 23, '1500.60', 2, NULL),
-(13, 1, 'Registro de saldo inicial', 0, '2016-07-15', 23, '1600.16', 2, NULL),
-(14, 1, 'Registro de saldo inicial', 0, '2016-07-15', 23, '1500.00', 2, NULL),
-(15, 1, 'Registro de saldo inicial', 0, '2016-07-15', 23, '1600.00', 2, NULL),
-(16, 1, 'Registro de saldo inicial', 0, '2016-07-15', 64, '1600.16', 2, NULL),
-(18, 2, 'pago deuda', 21263466, '2016-07-15', 29, '2000.00', 1, NULL),
-(19, 2, 'pago deuda 1', 21263467, '2016-07-18', 19, '1950.00', 1, 2);
+INSERT INTO `pago` (`pago_id`, `pago_tipo_id`, `pago_concepto`, `pago_numero`, `pago_fecha`, `pago_usuario_id`, `pago_monto`, `pago_estado_id`, `pago_usuario_reg`, `pago_fecha_updat`, `pago_user_updat`) VALUES
+(2, 1, 7, 0, '2016-07-15', 44, '2500.00', 2, NULL, NULL, NULL),
+(5, 1, 7, 0, '2016-07-15', 44, '1000.00', 2, NULL, NULL, NULL),
+(11, 1, 7, 0, '2016-07-15', 23, '1500.60', 2, NULL, NULL, NULL),
+(12, 1, 7, 0, '2016-07-15', 23, '1500.60', 2, NULL, NULL, NULL),
+(13, 1, 7, 0, '2016-07-15', 23, '1600.16', 2, NULL, NULL, NULL),
+(14, 1, 7, 0, '2016-07-15', 23, '1500.00', 2, NULL, NULL, NULL),
+(15, 1, 7, 0, '2016-07-15', 23, '1600.00', 2, NULL, NULL, NULL),
+(16, 1, 7, 0, '2016-07-15', 64, '1600.16', 2, NULL, NULL, NULL),
+(18, 2, 7, 21263466, '2016-07-15', 29, '2000.00', 1, NULL, NULL, NULL),
+(19, 2, 1, 21263467, '2016-07-18', 19, '1950.00', 3, 2, NULL, NULL),
+(20, 3, 1, 2163468, '2016-07-21', 14, '1337.00', 3, 2, '2016-08-09', 2),
+(21, 2, 1, 21263469, '2016-07-27', 17, '2600.00', 2, 2, NULL, NULL),
+(22, 1, 7, 0, '2016-08-04', 45, '1900.00', 2, 2, NULL, NULL),
+(23, 4, 5, 21263471, '2016-08-04', 45, '1555.67', 1, 2, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pago_concepto`
+--
+
+CREATE TABLE IF NOT EXISTS `pago_concepto` (
+  `id_concepto` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `desc_concepto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `tipo_concepto` int(11) NOT NULL,
+  PRIMARY KEY (`id_concepto`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=8 ;
+
+--
+-- Volcado de datos para la tabla `pago_concepto`
+--
+
+INSERT INTO `pago_concepto` (`id_concepto`, `desc_concepto`, `tipo_concepto`) VALUES
+(1, 'Pago de Mensualidad', 1),
+(2, 'Pago de Mora', 1),
+(3, 'Mensualidad', 2),
+(4, 'Mora', 2),
+(5, 'Otros Pagos', 1),
+(6, 'Otras Deducciones', 2),
+(7, 'Saldo Inicial', 0);
 
 -- --------------------------------------------------------
 
@@ -522,7 +643,7 @@ CREATE TABLE IF NOT EXISTS `pago_estado` (
 
 INSERT INTO `pago_estado` (`id_estado`, `desc_estado`, `color`) VALUES
 (1, 'En Espera', 'label-warning'),
-(2, 'Validado', 'label-success'),
+(2, 'Aprobado', 'label-success'),
 (3, 'Rechazado', 'label-danger');
 
 -- --------------------------------------------------------
@@ -534,18 +655,22 @@ INSERT INTO `pago_estado` (`id_estado`, `desc_estado`, `color`) VALUES
 CREATE TABLE IF NOT EXISTS `pago_tipo` (
   `id_tipo` int(10) NOT NULL AUTO_INCREMENT,
   `desc_tipo` varchar(25) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `tipo_tipo` int(11) NOT NULL,
   PRIMARY KEY (`id_tipo`),
   KEY `desc_tipo` (`desc_tipo`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tipos de pago' AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Tipos de pago' AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `pago_tipo`
 --
 
-INSERT INTO `pago_tipo` (`id_tipo`, `desc_tipo`) VALUES
-(3, 'Depósito'),
-(1, 'Registro Inicial'),
-(2, 'Transferencia');
+INSERT INTO `pago_tipo` (`id_tipo`, `desc_tipo`, `tipo_tipo`) VALUES
+(1, 'Registro Inicial', 0),
+(2, 'Transferencia', 0),
+(3, 'Depósito', 0),
+(4, 'Cheque', 0),
+(5, 'Mora', 1),
+(6, 'Cobro de condominio', 1);
 
 -- --------------------------------------------------------
 
@@ -580,7 +705,7 @@ CREATE TABLE IF NOT EXISTS `saldo` (
   `saldo_monto` decimal(13,2) NOT NULL,
   PRIMARY KEY (`saldo_id`),
   KEY `saldo_id_usuario` (`saldo_id_usuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Saldos de los usuarios' AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Saldos de los usuarios' AUTO_INCREMENT=9 ;
 
 --
 -- Volcado de datos para la tabla `saldo`
@@ -590,7 +715,10 @@ INSERT INTO `saldo` (`saldo_id`, `saldo_id_usuario`, `saldo_monto`) VALUES
 (1, 44, '3500.00'),
 (2, 23, '7701.36'),
 (3, 64, '1600.16'),
-(4, 29, '2000.00');
+(4, 29, '2000.00'),
+(6, 17, '2600.00'),
+(7, 45, '3455.67'),
+(8, 14, '-445.00');
 
 -- --------------------------------------------------------
 
@@ -637,7 +765,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `inquilino`, `id_role`, 
 (11, '', '', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, '2DfmaPLmhcjdYzPaHIEe31tpb8wZplx3Ey3s5N2yEdxVHwDuoJJRo8r69hLX', '2016-06-18 12:37:02', '2016-07-03 07:54:21', '', '', '9A', 9, '', ''),
 (12, '', '', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, 'VkLYUDgcRjvH07j6dUspQN85ZIYgn8I2TWIuM7T1dwi4HGCjgOssLbmu09BB', '2016-06-18 12:37:02', '2016-07-05 05:55:18', '', '', '10A', 10, '', ''),
 (13, '', '', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, NULL, '2016-06-18 12:37:02', '2016-06-27 15:41:04', '', '', '11A', 11, '', ''),
-(14, 'Ivan Cabana', 'linaisabel@hotmail.com', '$2y$10$D7N/9s0cY9/5yWr8aFYhvuAELpz1o2LDB9jxK6egydBjgkTTrrZmi', 0, 0, '7QgV9lLEV7XwQ11YHYJGmdQVXJEi6d1N9jPD6cVCudlBmHvllu76bcvJawhf', '2016-06-18 12:37:02', '2016-07-11 07:14:57', '64000707', '3943706', '12A', 12, '', ''),
+(14, 'Ivan Cabana', 'gomezg.augusto@gmail.com', '$2y$10$D7N/9s0cY9/5yWr8aFYhvuAELpz1o2LDB9jxK6egydBjgkTTrrZmi', 0, 0, '7QgV9lLEV7XwQ11YHYJGmdQVXJEi6d1N9jPD6cVCudlBmHvllu76bcvJawhf', '2016-06-18 12:37:02', '2016-07-11 07:14:57', '64000707', '3943706', '12A', 12, '', ''),
 (15, '', '', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, NULL, '2016-06-18 12:37:02', '2016-06-27 15:41:04', '', '', '13A', 13, '', ''),
 (16, '', '', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, NULL, '2016-06-18 12:37:02', '2016-06-27 15:41:04', '', '', '14A', 14, '', ''),
 (17, 'Oscar Eduardo Beltran', 'edinhobel05@hotmail.com', '$2y$10$iJxxWJpb7yGtSY/KwKCJ0.yrlLkDblSq1EumNGgv5kM6X6Y73fFGa', 0, 0, '8k3LHZ0KR81mpcHZ3OC26Auy3XMJeSMd7t5KFila8d7iSM87XU4rSLuyWvoW', '2016-06-18 12:37:02', '2016-07-02 22:16:42', '65998300', '3959343', '15A', 15, '', ''),
