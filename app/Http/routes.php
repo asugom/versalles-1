@@ -136,10 +136,46 @@ Route::post('password/email', 'Auth\PasswordController@postEmail');
 Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
 Route::post('password/reset', 'Auth\PasswordController@postReset');
 
-Route::resource('notificacion', 'Notificacion');
+//archivos adjuntos
 
+Route::get('adjuntar_archivo',[
+    'uses'=>'archivos_adj@index',
+    'as'=> 'adjuntar_archivo'
+]);
 
+Route::post('adjuntar_archivo',[
+    'uses'=>'archivos_adj@store',
+    'as'=> 'adjuntar_archivo'
+]);
 
+Route::post('/list_docs',[
+    'uses'=>'archivos_adj@listar',
+    'as'=> 'list_docs'
+]);
+Route::post('/borrar_doc',[
+    'uses'=>'archivos_adj@borrar',
+    'as'=> 'borrar_doc'
+]);
+Route::get('/listar_docs', [
+    'uses'=>'archivos_adj@listarAll',
+    'as'=> 'listar_docs'
+]);
+
+Route::get('/borrar_antiguos', [
+    'uses'=>'Archivos@borrar_antiguos',
+    'as'=> 'borrar_antiguos'
+]);
+
+Route::get('/galeria_rec', [
+    'uses'=>'Gallery@new_recientes',
+    'as'=> 'galeria_rec'
+]);
+Route::post('cambiar_imagen',[
+    'uses'=>'Gallery@cambiar_imagen',
+    'as'=> 'cambiar_imagen'
+]);
+
+Route::resource('deuda', 'Deudas');
 
 // Registration routes...
 //Route::get('auth/register', 'Auth\AuthController@getRegister');

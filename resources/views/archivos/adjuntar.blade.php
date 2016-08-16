@@ -6,25 +6,22 @@
 
 
 @section('sidebar')
-    @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
-        @include('menu.menuadmin', array('encuesta'=>'active'))
-    @else
-        @include('menu.menuuser', array('encuesta'=>'active'))
-    @endif
+    @include('menu.menuadmin', array('archivo'=>'active'))
 @endsection
 
 @section('wrapper')
+
 <section id="content_wrapper">
       <!-- Start: Topbar -->
       <header id="topbar" class="alt" style=" min-height: 10px;padding: 10px 10px; ">
         <div class="topbar-left">
           <ol class="breadcrumb">
             <li class="crumb-icon">
-              <a href="{{route('home')}}">
+              <a href="dashboard.html">
                 <span class="glyphicon glyphicon-home"></span>
               </a>
             </li>
-            <li class="crumb-trail">Crear nueva encuesta</li>
+            <li class="crumb-trail">Adjuntar Archivo</li>
           </ol>
         </div>
       </header>
@@ -42,44 +39,40 @@
 
               <div class="panel heading-border  panel-dark">
                 <div class="panel-body bg-light">
-                    {!! Form::open(array('route' => 'save_encuesta','method'=>'POST','id'=>'admin-form')) !!}
-                          <div class="section-divider mb40" id="spy1">
-                              <span>Datos de la encuesta</span>
-                          </div>
+                    <input type="hidden" id="message" value="{{ Session::get('message') }}">
+                    {!! Form::open(array('route' => 'adjuntar_archivo','method'=>'POST','id'=>'admin-form','files'=>'true')) !!}
 
+                          <div class="section-divider mv40" id="spy4">
+                              <span>Adjuntar nuevo archivo</span>
+                          </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="section">
                                     <label class="field prepend-icon">
-                                        <input type="text" name="consulta" id="consulta" class="gui-input" placeholder="Consulta">
-                                        <label for="consulta" class="field-icon">
-                                            <i class="fa fa-question"></i>
+                                        <input type="text" name="titulo" id="titulo" class="gui-input" placeholder="Titulo del archivo">
+                                        <label for="titulo" class="field-icon">
+                                            <i class="fa fa-comments-o"></i>
                                         </label>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-8">
                                 <div class="section">
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="opcionadd" id="opcionadd" class="gui-input" placeholder="Añadir opcion a la encuesta">
-                                        <label for="opcionadd" class="field-icon">
-                                            <i class="fa fa-bars"></i>
+                                    <label class="field prepend-icon append-button file">
+                                        <span class="button btn-primary">Choose File</span>
+                                        <input class="gui-file" name="file1" id="file1" onchange="document.getElementById('uploader1').value = this.value;" type="file">
+                                        <input class="gui-input" id="uploader1" placeholder="Please Select A File" type="text">
+                                        <label class="field-icon">
+                                            <i class="fa fa-upload"></i>
                                         </label>
                                     </label>
                                 </div>
                             </div>
-                            <div class="col-md-6" >
-                                <button type="button" id="add_opcion" class="button btn-primary mr10 pull-left">+</button>
-                            </div>
                         </div>
-                    <fieldset id="opciones">
-                        <legend>Opciones agregadas</legend>
-                    </fieldset>
+                        <button type="submit" class="button btn-primary mr10 pull-right">Guardar Archivo</button>
 
-
-                        <button type="submit" class="button btn-primary mr10 pull-right">Guardar Encuesta</button>
                     {!! Form::close() !!}
                 </div>
               </div>
@@ -107,11 +100,11 @@
     </footer>
     <!-- End: Page Footer -->
 </section>
-
 @endsection
 
 @section('scripts')
-
+  
+  <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/pnotify/pnotify.custom.min.css') }}">
   <!-- jQuery -->
   <script src="{{ URL::asset('vendor/jquery/jquery-1.11.1.min.js') }}"></script>
   <script src="{{ URL::asset('vendor/jquery/jquery_ui/jquery-ui.min.js') }}"></script>
@@ -124,28 +117,32 @@
 
 
   <!-- Theme Javascript -->
-  <script src="{{ URL::asset('assets/js/utility/utility.js') }}"></script>
 
 
   <!-- PNotify -->
-  <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify.js') }}"></script>
-
+  <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify2.custom.min.js') }}"></script>
 
   <script type="text/javascript">
-      var opciones=0;
-      function preva(a) {
-          opciones--;
-          $(a).parent().parent().remove()
-      };
-
   jQuery(document).ready(function() {
 
-      "use strict";
+      $("#admin-form").submit(function( event ) {
+        if ( $( "#titulo" ).val().length > 0 &&  $( "#file1" ).val().length>0 ) {
+          return true;
+        }
+   new PNotify({
+            title: 'Aviso',
+            text: 'Ingrese los datos de la publicación',
+             type: 'error',
+            icon: false
+        });
+        event.preventDefault();
+      });
 
-      @if(isset($status))
+      if ($("#message").val()!='') {
+              
         new PNotify({
           title: 'Aviso',
-          text: '{{$status}}',
+          text: $("#message").val(),
           shadow: "true",
           opacity: "1",
           addclass: "stack_top_right",
@@ -158,82 +155,37 @@
               "spacing2": 10
           },
           width: "550px",
-          delay: 3000
-        });
-      @endif
-
-      $('#admin-form').on('submit',function(event){
-
-          console.log(opciones);
-          if(opciones < 2){
-              event.preventDefault();
-              new PNotify({
-                  title: 'Aviso',
-                  text: 'Debe agregar al menos dos opciones',
-                  type: "error",
-                  width: "400px",
-              });
-          }
+          delay: 3000,
+            icon: false
       });
-
-
-
-      var intId=0;
-      $("#add_opcion").click(function() {
-          if ($("#opcionadd").val() != ""){
-              opciones++;
-              console.log(opciones);
-              intId = intId + 1;
-              var fieldWrapper = $("<div class='row'>" +
-                      "<div class='col-md-6'>" +
-                        "<div class='section'>" +
-                            "<label class='field prepend-icon'>" +
-                                "<input type='text' name='opcion[]' id='opcion" + intId + "' class='gui-input' value='" + $("#opcionadd").val() + "' >" +
-                                    "<label for='opcion' class='field-icon'>" +
-                                        "<i class='fa fa-angle-right'></i>" +
-                                    "</label>" +
-                            "</label>" +
-                        "</div>" +
-                      "</div>" +
-                      "<div class='col-md-6' >" +
-                        "<button type='button' id='rem_opcionx' onclick='preva(this)'  class='button btn-primary mr10 pull-left rem_opcion'>-</button>" +
-                      "</div>" +
-                      "</div>");
-              $("#opcionadd").val("");
-              $("#opciones").append(fieldWrapper);
-          }else{
-              new PNotify({
-                  title: 'Aviso',
-                  text: 'Ingrese una opcion valida',
-                  type: "error",
-                  width: "400px"
-              });
-          }
-      });
-
-
-
-      $("#admin-form").validate({
-
-      /* @validation states + elements 
-      ------------------------------------------- */
-
+      }
+  $("#admin-form").validate({
       errorClass: "state-error",
       validClass: "state-success",
       errorElement: "em",
-
       rules: {
-          consulta: {
+        file1: {
+            required: true, 
+            accept: "image/gif,image/png,image/bmp,image/jpeg,image/jpg,application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-powerpoint,text/plain,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.slideshow,application/vnd.openxmlformats-officedocument.presentationml.presentation", 
+            filesize: 2048576  },
+        titulo: {
             required: true
         }
+
       },
       messages: {
-          consulta: {
-          required: 'Ingrese el titulo de la encuesta'
+        titulo: {
+          required: 'Ingrese el titulo'
+        },
+        file1:{
+          required:"Debe seleccionar un archivo",
+          accept:'Se permiten archivos tipo .doc, .xls e imagenes',
+          filesize:'Tamaño maximo excedido'
         }
-
       },
 
+      /* @validation highlighting + error placement  
+      ---------------------------------------------------- */
 
       highlight: function(element, errorClass, validClass) {
         $(element).closest('.field').addClass(errorClass).removeClass(validClass);
@@ -250,7 +202,6 @@
       }
 
     });
-
 
 
   });

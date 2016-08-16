@@ -25,6 +25,10 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datatables/extensions/ColReorder/css/dataTables.colReorder.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/animate/animate_2.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/pnotify/pnotify.custom.min.css') }}">
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/magnific/magnific-popup.css') }}">
+
+
 
     <!-- Start: Topbar -->
     <header id="topbar" class="alt" style=" min-height: 10px;padding: 10px 10px; ">
@@ -43,6 +47,84 @@
     <!-- End: Topbar -->
           <input type="hidden" id="success" value="{{ Session::get('success') }}">
           <input type="hidden" id="danger" value="{{ Session::get('danger') }}">
+
+     <!-- Admin Form Popup -->
+        <div id="modal-form" class=" popup-basic admin-form mfp-with-anim mfp-hide">
+          <div class="panel">
+            <div class="panel-heading">
+              <span class="panel-title">
+                <i class="fa fa-rocket"></i>Aprobar Pago</span>
+            </div>
+            <!-- end .panel-heading section -->
+            <form method="post" action="/" id="aprobar">
+              <div class="panel-body p25">
+                <div class="section row">
+                  <div class="col-md-12" id="div_recibo">
+                    <h3 class="mt5" id="texto-recibo"></h3>
+                  </div>
+                  <div class="col-md-12">
+                    <hr class="short alt">
+                    <label for="fecha" class="field prepend-icon">
+                      <input type="text" name="fecha" id="fecha" class="gui-input" placeholder="Fecha">
+                      <label for="fecha" class="field-icon">
+                        <i class="fa fa-calendar"></i>
+                      </label>
+                    </label>
+                  </div>
+                  <!-- end section -->
+                </div>
+                <!-- end section row section -->
+              </div>
+              <!-- end .form-body section -->
+              <div class="panel-footer">
+                <button type="submit" class="button btn-primary">Aprobar</button>
+              </div>
+              <!-- end .form-footer section -->
+            </form>
+          </div>
+          <!-- end: .panel -->
+        </div>
+        <!-- end: .admin-form -->
+
+        <!-- Admin Form Popup -->
+        <div id="rechazar-form" class=" popup-basic admin-form mfp-with-anim mfp-hide">
+          <div class="panel">
+            <div class="panel-heading">
+              <span class="panel-title">
+                <i class="fa fa-rocket"></i>Rechazar Pago</span>
+            </div>
+            <!-- end .panel-heading section -->
+            <form method="post" action="/" id="rechazar">
+              <div class="panel-body p25">
+                <div class="section row">
+                  <div class="col-md-12" id="div_recibo_r">
+                    <h3 class="mt5" id="texto-recibo-r"></h3>
+                  </div>
+                  <div class="section">
+                  <label for="comment" class="field prepend-icon">
+                    <textarea class="gui-textarea" id="comment" name="comment" placeholder="Motivo del pago"></textarea>
+                    <label for="comment" class="field-icon">
+                      <i class="fa fa-comments"></i>
+                    </label>
+                    <span class="input-footer">
+                      Introduzca motivo de rechazo...</span>
+                  </label>
+                </div>
+                  <!-- end section -->
+                </div>
+                <!-- end section row section -->
+              </div>
+              <!-- end .form-body section -->
+              <div class="panel-footer">
+                <button type="submit" class="button btn-primary">Rechazar</button>
+              </div>
+              <!-- end .form-footer section -->
+            </form>
+          </div>
+          <!-- end: .panel -->
+        </div>
+        <!-- end: .admin-form -->
+
       <!-- Begin: Content -->
       <section id="content" class="table-layout animated fadeIn">
           <input type="hidden" name="_token" value="{{ Session::token() }}">
@@ -96,33 +178,8 @@
             </div>
           </div>
 
-          <div class="admin-form  theme-system" id="form_aprobar" style="display: none;">
-              <form id="pf-form" action="" method="post">
-                <h4 class="micro-header">Aprobar Pago</h4>
-                <div class="section-divider mv40" id="spy4">
-                    <span id="span_recibo">Aprobar el pago #</span>
-                </div>
-                <div class= "row">
-                  <div class="col-md-6">
-                      <div class="section">
-                          <label class="field prepend-icon">
-                              <input type="text" name="fecha" id="fecha" class="gui-input" placeholder="Fecha del Recibo">
-                              <label for="fecha" class="field-icon">
-                                  <i class="fa fa-calendar"></i>
-                              </label>
-                          </label>
-                      </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <!-- <div class="col-md-6"> -->
-                    <input class="btn-primary" type="submit" name="aprobar" value="Aprobar" />
-                    <input class="btn-default" type="button" name="cancelar" value="Cancelar" />
-                  <!-- </div> -->   
-                </div>
-                
-              </form>
-          </div>
+         
+
 
         </div>
         <!-- end: .tray-center -->
@@ -173,11 +230,17 @@
   <script src="{{ URL::asset('assets/js/demo/demo.js') }}"></script>
   <script src="{{ URL::asset('assets/js/main.js') }}"></script>
 
+    <!-- Page Plugins -->
+  <script src="{{ URL::asset('vendor/plugins/magnific/jquery.magnific-popup.js') }}"></script>
+
+
     <!-- PNotify -->
   <script src="{{ URL::asset('vendor/plugins/pnotify/pnotify.custom.min.js') }}"></script>
 
   <script type="text/javascript">
   PNotify.prototype.options.styling = "bootstrap3";
+  var sid = 0;
+  var sopt = 0;
   jQuery(document).ready(function() {
 
     "use strict";
@@ -299,7 +362,82 @@
         "order": [[1, 'asc']]
       });
     });
-    
+
+    $('#aprobar').on('submit', function (event) {
+      // body...
+      event.preventDefault();
+      var url  = '{!! route('update_pago') !!}';
+      var post = {};
+      post.id = sid;
+      post.opt = sopt;
+      post.message = '';
+      post.fecha = $('#fecha').val();
+      $.magnificPopup.close();
+      console.log(post);
+
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {'id': post.id, 
+          'opt': post.opt, 
+          'fecha': post.fecha, 
+          'message': post.message, 
+          '_token': $('input[name=_token]').val()
+        },
+        success: function(data){
+
+          new PNotify({
+            title: 'Resultado de la operación.',
+            text: data.msg,
+            type: data.type
+          });
+
+        var currentSource = "{!! route('index_pago') !!}";
+        var table = $('#datatable9').DataTable();
+        table.ajax.url(currentSource).load();
+
+        console.log(data);
+        }
+      });
+
+    });
+
+    $('#rechazar-form').on('submit', function (event) {
+      // body...
+      event.preventDefault();
+      var url  = '{!! route('update_pago') !!}';
+      var post = {};
+      post.id = sid;
+      post.opt = sopt;
+      post.message = $('#comment').val();
+      post.date = '';
+      $.magnificPopup.close();
+      console.log(post);
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {'id': post.id, 
+          'opt': post.opt, 
+          'fecha': post.fecha, 
+          'message': post.message, 
+          '_token': $('input[name=_token]').val()
+        },
+        success: function(data){
+
+        new PNotify({
+            title: 'Resultado de la operación.',
+            text: data.msg,
+            type: data.type
+        });
+
+        var currentSource = "{!! route('index_pago') !!}";
+        var table = $('#datatable9').DataTable();
+        table.ajax.url(currentSource).load();
+
+        console.log(data);
+        }
+      });
+    });
 
   });
 
@@ -310,146 +448,43 @@
 
     switch (opt){
       case 1: 
-              texto = '<span id="span_recibo">Aprobar el pago #'+recibo+'</span>';
-              $('#span_recibo').remove();
-              $('#spy4').append(texto);
-              var notice = new PNotify({
-                text: $('#form_aprobar').html(),
-                icon: false,
-                width: 'auto',
-                hide: false,
-                buttons: {
-                    closer: false,
-                    sticker: false
+              texto = '<h3 class="mt5" id="texto-recibo">Aprobar el pago con recibo #'+recibo+'?</h3>';
+              $('#texto-recibo').remove();
+              $('#div_recibo').append(texto);
+              sid = id;
+              sopt = opt;
+              $.magnificPopup.open({
+                removalDelay: 500, 
+                items: {
+                  src: '#modal-form'
                 },
-                insert_brs: false,
-                history: {
-                    history: false
+                callbacks: {
+                  beforeOpen: function(e) {
+                    this.st.mainClass = 'mfp-zoomIn';
+                  }
                 },
-                addclass: 'stack-modal',
-                modal: true,
-                stack: {
-                    'dir1': 'down',
-                    'dir2': 'right'
-                }
+                midClick: true 
               });
-              notice.get().find('#pf-form').on('click', '[name=cancelar]', function() {
-                  notice.remove();
-              }).submit(function(event) {
-                event.preventDefault();
-                notice.remove();
-                
-                var post = {};
-                post.id = id;
-                post.opt = opt;
-                post.message = '';
-                post.date = $('#fecha').val();
 
-                // $.ajax({
-                //   url: url,
-                //   type: "POST",
-                //   data: {'id': post.id, 
-                //     'opt': post.opt, 
-                //     'date': post.date, 
-                //     'message': post.message, 
-                //     '_token': $('input[name=_token]').val()
-                //   },
-                //   success: function(data){
-
-                //   new PNotify({
-                //       title: 'Resultado de la operación.',
-                //       text: data.msg,
-                //       type: data.type
-                //   });
-
-                //   currentSource = "{!! route('index_pago') !!}";
-                //   var table = $('#datatable9').DataTable();
-                //   table.ajax.url(currentSource).load();
-
-                //   console.log(data);
-                //   }
-                // });
-              });
               break;
-      case 2: title= 'Rechazar pagos';
-              text = 'Rechazar el Pago #'+recibo+'?';
-              var d = new Date();
-              var month = d.getMonth()+1;
-              var day = d.getDate();
-              var output = ((''+day).length<2 ? '0' : '') + day + '/' +
-              ((''+month).length<2 ? '0' : '') + month + '/' +
-              d.getFullYear();
-
-            new PNotify({
-              title: title,
-              text: text,
-              icon: 'glyphicon glyphicon-question-sign',
-              hide: false,
-              confirm: {
-                  prompt: true,
-                  prompt_multi_line: true,
-                  prompt_default: 'Roses are red,\nViolets are blue,\n',
-                  buttons: [{
-                    text: 'Aceptar',
-                    addClass: 'btn-primary',
-                    click: function(notice, val) {
-                      notice.remove();
-                      var url  = '{!! route('update_pago') !!}';
-                      var post = {};
-                      post.id  = id;
-                      post.opt = opt;
-                      post.date = output;
-                      post.message = $('<div/>').text(val).html();
-                      console.log(post);
-                      // $.ajax({
-                      //   url: url,
-                      //   type: "POST",
-                      //   data: {'id': post.id, 
-                      //     'opt': post.opt, 
-                      //     'date': post.date, 
-                      //     'message': post.message, 
-                      //     '_token': $('input[name=_token]').val()
-                      //   },
-                      //   success: function(data){
-
-                      //   new PNotify({
-                      //       title: 'Resultado de la operación.',
-                      //       text: data.msg,
-                      //       type: data.type
-                      //   });
-
-                      //   currentSource = "{!! route('index_pago') !!}";
-                      //   var table = $('#datatable9').DataTable();
-                      //   table.ajax.url(currentSource).load();
-
-                      //   console.log(data);
-                      //   }
-                      // });
-                    }
-                  }, {
-                    text: 'Cancelar',
-                    addClass: 'btn-primary',
-                    click: function(notice) {
-                        notice.remove();
-                    }
-                  }]
-              },
-              
-              buttons: {
-                  closer: false,
-                  sticker: false
-              },
-              history: {
-                  history: false
-              },
-              addclass: 'stack-modal',
-              stack: {
-                  'dir1': 'down',
-                  'dir2': 'right'
-              }
-            });
-
-
+      case 2: 
+              texto = '<h3 class="mt5" id="texto-recibo-r">Rechazar el pago con recibo #'+recibo+'?</h3>';
+              $('#texto-recibo-r').remove();
+              $('#div_recibo_r').append(texto);
+              sid = id;
+              sopt = opt;
+              $.magnificPopup.open({
+                removalDelay: 500, 
+                items: {
+                  src: '#rechazar-form'
+                },
+                callbacks: {
+                  beforeOpen: function(e) {
+                    this.st.mainClass = 'mfp-zoomIn';
+                  }
+                },
+                midClick: true 
+              });
 
               break;
       // case 3: title= 'Aprobar pago';

@@ -12,6 +12,10 @@ use App\User;
 
 class Notificacion extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -102,8 +106,20 @@ class Notificacion extends Controller
         //
     }
 
-    public function leer()
+    public function leer($id)
     {
         DB::table('Notificacion')->where('id', '=', $id)->update(['visto'=>1]);
+    }
+
+    public function newNotif($uid, $desc, $url)
+    {
+         //
+        $id = DB::table('notificacion')->insertGetId([
+            'id_usuario'    =>  $uid,
+            'descripcion'   =>  $desc,
+            'url'           =>  $url,
+            'visto'         =>  0
+        ]);
+
     }
 }

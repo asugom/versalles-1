@@ -7,9 +7,9 @@
 
 @section('sidebar')
     @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
-        @include('menu.menuadmin', array('pagos'=>'active'))
+        @include('menu.menuadmin', array('deudas'=>'active'))
     @else
-        @include('menu.menuuser', array('pagos'=>'active'))
+        @include('menu.menuuser', array('deudas'=>'active'))
     @endif
 @endsection
 
@@ -25,7 +25,7 @@
                 <span class="glyphicon glyphicon-home"></span>
               </a>
             </li>
-            <li class="crumb-trail">Registrar recibo de pago</li>
+            <li class="crumb-trail">Registrar cuenta por cobrar</li>
           </ol>
         </div>
       </header>
@@ -44,29 +44,12 @@
 
               <div class="panel heading-border  panel-dark">
                 <div class="panel-body bg-light">
-                    <h4 class="micro-header">Registrar recibo de pago</h4>
+                    <h4 class="micro-header">Registrar cuenta por cobrar</h4>
 
-                    {!! Form::open(array('route' => 'save_pago','method'=>'POST','id'=>'admin-form')) !!}
-                          
-                          @if (Auth::user()->id_role == 1 || Auth::user()->id_role == 2)
-                              <input type="hidden" name="estado_id" value="2">
-                          @else
-                              <input type="hidden" name="estado_id" value="1">
-                          @endif
-
-                          <div class="section-divider mb40" id="spy1">
-                              <span>Seleccione el tipo de pago realizado</span>
-                          </div>
-                        	<div class="option-group field">
-                            @foreach($tipos as $tipo)
-                              <label class="radio-inline"><input type="radio" name="optradio" value="{{ $tipo->id }}" >{{ $tipo->name }}</label>
-                            @endforeach
-            							  <!-- <label class="radio-inline"><input type="radio" id="radioTransf" name="optradio" >Transferencia</label>
-            							  <label class="radio-inline"><input type="radio" id="radioDeposito" name="optradio" >Depósito</label> -->
-            							</div>
+                    {!! Form::open(array('route' => 'deuda.store','method'=>'POST','id'=>'admin-form')) !!}
                        
                           <div class="section-divider mv40" id="spy4">
-                              <span>Datos del recibo</span>
+                              <span>Datos de la cuenta por cobrar</span>
                           </div>
 
                           @if((Auth::user()->id_role == 1 || Auth::user()->id_role == 2) && is_array($usuarios))
@@ -81,64 +64,50 @@
                                   </div>
                               </div>
                             </div>
-                          @else
-                            {!! Form::hidden('usuarios', $usuarios) !!}
                           @endif
 
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="section">
                                   <label class="field select">
-                                      {!! Form::select('concepto', $conceptos, null, ['placeholder' => 'Seleccione un concepto de pago']) !!}
+                                      {!! Form::select('concepto', $conceptos, null, ['placeholder' => 'Seleccione un concepto']) !!}
                                       <i class="arrow"></i>
                                   </label>
-                                    <!-- <label class="field prepend-icon">
-                                        <input type="text" name="concepto" id="concepto" class="gui-input" placeholder="Concepto">
-                                        <label for="concepto" class="field-icon">
-                                            <i class="fa fa-file-text-o"></i>
-                                        </label>
-                                    </label> -->
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row hide" id="otras">
+                          <div class="col-md-12">
+                            <div class="section">
+                                <label class="field prepend-icon">
+                                   <input type="text" name="o_concepto" id="o_concepto" class="gui-input" placeholder="Otro concepto">
+                                    <label for="monto" class="field-icon">
+                                        <i class="fa fa-angle-right"></i>
+                                    </label>
+                                </label>
+                            </div>
+                          </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="section">
                                     <label class="field prepend-icon">
-                                        <input type="text" name="recibo" id="recibo" class="gui-input" placeholder="Número del Recibo">
-                                        <label for="recibo" class="field-icon">
-                                            <i class="fa fa-asterisk"></i>
-                                        </label>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="section">
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="fecha" id="fecha" class="gui-input" placeholder="Fecha del Recibo">
-                                        <label for="fecha" class="field-icon">
-                                            <i class="fa fa-calendar"></i>
-                                        </label>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                        	<div class="col-md-6 pull-right">
-                                <div class="section">
-                                    <label class="field prepend-icon">
-                                        <input type="text" name="monto" id="monto" class="gui-input" placeholder="Monto del Recibo">
+                                       <input type="text" name="monto" id="monto" class="gui-input" placeholder="Monto del Recibo">
                                         <label for="monto" class="field-icon">
                                             <i class="fa fa-dollar"></i>
                                         </label>
+                                        
                                     </label>
                                 </div>
                             </div>
-                        </div>
 
-                        <button type="submit" class="button btn-primary mr10 pull-right">Guardar</button>
+                            <div class="col-md-6">
+                              <button type="submit" class="button btn-primary mr10 pull-right">Guardar</button>
+                            </div>
+                        </div>
+                                             
                     {!! Form::close() !!}
                 </div>
               </div>
@@ -171,7 +140,7 @@
 @endsection
 
 @section('scripts')
-    <link rel="stylesheet" type="text/css" href="vendor/plugins/datepicker/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/datepicker/css/bootstrap-datetimepicker.css') }}">
   <!-- jQuery -->
   <script src="{{ URL::asset('vendor/jquery/jquery-1.11.1.min.js') }}"></script>
   <script src="{{ URL::asset('vendor/jquery/jquery_ui/jquery-ui.min.js') }}"></script>
@@ -212,6 +181,15 @@
           pickTime: false
       });
 
+      $('body').on('change', '[name=concepto]', function () {
+        // Otras deducciones
+        if (this.value == 6 && !$('#otras').is(':visible')) {
+          $('#otras').removeClass('hide');
+        }else if ($('#otras').is(':visible') && this.value != 6) {
+          $('#otras').addClass('hide');
+        }
+      });
+
 
       $("#admin-form").validate({
 
@@ -236,15 +214,18 @@
             required: true,
             number: true
         },
-        recibo: {
-            required: true
-        },
-        optradio: {
-            required: true
-        },
-        fecha:{
-            required: true
+        o_concepto: {
+          required: true
         }
+        // recibo: {
+        //     required: true
+        // },
+        // optradio: {
+        //     required: true
+        // },
+        // fecha:{
+        //     required: true
+        // }
       },
 
       /* @validation error messages 
@@ -261,15 +242,15 @@
           required: 'Ingrese el monto del pago',
           number: 'Ingrese un número válido'
         },
-        recibo: {
-          required: 'Ingrese el número del recibo del pago'
-        },
-        optradio: {
-          required: 'Seleccione un tipo de pago'
-        },
-        fecha:{
-            required:'Ingrese la fecha del pago'
+        o_concepto: {
+          required: 'Ingrese un concepto'
         }
+        // optradio: {
+        //   required: 'Seleccione un tipo de pago'
+        // },
+        // fecha:{
+        //     required:'Ingrese la fecha del pago'
+        // }
       },
 
       /* @validation highlighting + error placement  

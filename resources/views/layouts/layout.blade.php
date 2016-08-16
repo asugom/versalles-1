@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/slick/slick.css') }}">
 
     <!-- Summernote CSS  -->
-    <link rel="stylesheet" type="text/css" href="vendor/plugins/summernote/summernote.css">
+    <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/summernote/summernote.css') }}">
 
     <!-- FullCalendar Plugin CSS -->
     <link rel="stylesheet" type="text/css" href="{{ URL::asset('vendor/plugins/fullcalendar/fullcalendar.min.css') }}">

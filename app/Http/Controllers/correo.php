@@ -136,20 +136,30 @@ class correo extends Controller
     {
         //
     }
-
-    /**
+       /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id_usuario Usuario al que se le va a enviar el texto
      * @param  array $data array('titulo' => 'titulo', 'text' => 'Mensaje');
      */
-    public function enviarUsuario($id_usuario, $data)
+    public function enviarUsuario($id, $data)
     {
         $emails =$this->val_correos( DB::select("(SELECT email as email FROM users WHERE id = ".$id.") UNION (SELECT emailalt_1 as email FROM users WHERE id = ".$id.") UNION (SELECT emailalt_2 as email FROM users WHERE id = ".$id.")"));
 
         $r= Mail::send('mail.correo', $data, function ($msj) use($emails){
             $msj->subject('Correo de Condominio');
             //$msj->to($emails);
+            $msj->bcc($emails);
+        });
+    }
+
+    public function NotificacionAdjunto($data)
+    {
+        $emails =$this->val_correos( DB::select("(SELECT email as email FROM users) UNION (SELECT emailalt_1 as email FROM users) UNION (SELECT emailalt_2 as email FROM users)"));
+        //$emails=["jsifontes48@gmail.com","joselincedenno@gmail.com","jcedeno@publired24.com"];
+        Mail::send('mail.correo', $data, function ($msj) use($emails){
+            $msj->subject('Correo de Condominio');
+
             $msj->bcc($emails);
         });
     }

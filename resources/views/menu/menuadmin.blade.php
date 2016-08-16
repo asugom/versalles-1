@@ -66,6 +66,20 @@
               </li>
             </ul>
           </li>
+          <li class="{{ $deudas or '' }}">
+            <a class="accordion-toggle" href="#">
+              <span class="glyphicon glyphicon-usd"></span>
+              <span class="sidebar-title">Cuentas por cobrar</span>
+              <span class="caret"></span>
+            </a>
+            <ul class="nav sub-nav" style="">
+              <li>
+                <a href="{{ route('deuda.create') }}">
+                  <span class="fa fa-plus"></span>Registrar cuenta por cobrar
+                </a>
+              </li>
+            </ul>
+          </li>
           <li class="{{ $encuesta or '' }}">
             <a class="accordion-toggle" href="#">
               <span class="fa fa-check-square-o"></span>
@@ -80,23 +94,38 @@
               </li>
             </ul>
           </li>
-          <li>
-            <a href="">
-              <span class="fa fa-envelope-o"></span>
-              <span class="sidebar-title">Buzón de Mensajes</span>
-            </a>
-          </li>
-          <li>
-            <a href="">
+          <li class="{{ $archivo or '' }}">
+            <a class="accordion-toggle" href="#">
               <span class="fa fa-file-word-o"></span>
               <span class="sidebar-title">Documentos</span>
+              <span class="caret"></span>
             </a>
+            <ul class="nav sub-nav" style="">
+              <li>
+                <a href="{{ route('adjuntar_archivo') }}">
+                  <span class="glyphicon glyphicon-pencil"></span>Adjuntar nuevo archivo
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('listar_docs') }}">
+                  <span class="fa fa-search"></span>Ver documentos
+                </a>
+              </li>
+            </ul>
           </li>
-          <li>
+          <li class="{{ $galeria or '' }}">
             <a href="">
               <span class="fa fa-picture-o"></span>
               <span class="sidebar-title">Galeria de Imagenes</span>
+              <span class="caret"></span>
             </a>
+            <ul class="nav sub-nav" style="">
+              <li>
+                <a href="{{ route('galeria_rec') }}">
+                  <span class="glyphicon glyphicon-pencil"></span>Modificar imagenes recientes
+                </a>
+              </li>
+            </ul>
           </li>
           
         </ul>

@@ -17,38 +17,6 @@
           </li>
         @endif
         <li class="dropdown menu-merge">
-          <div class="navbar-btn btn-group">
-            <button data-toggle="dropdown" class="btn btn-sm dropdown-toggle">
-              <span class="fa fa-bell-o fs14 va-m"></span>
-              <span class="badge badge-danger">{{ Auth::user()->getUserNotifCount() }}</span>
-            </button>
-          </div>
-          <div class="dropdown-menu dropdown-persist w350 animated animated-shorter fadeIn" role="menu">  
-              <div class="panel mbn">
-                  <div class="panel-menu">
-                     <span class="panel-icon"><i class="fa fa-clock-o"></i></span>
-                     <span class="panel-title fw600"> Recent Activity</span>
-                     <button class="btn btn-default light btn-xs pull-right" type="button"><i class="fa fa-refresh"></i></button>
-                  </div>
-                  <div class="panel-body panel-scroller scroller-navbar scroller-overlay scroller-pn pn">
-                      <ol class="timeline-list">
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            <b>Michael</b> Added to his store:
-                            <a href="#">Ipod</a>
-                          </div>
-                          <div class="timeline-date">1:25am</div>
-
-                        </li>
-                      </ol>
-                  </div>
-              </div>
-          </div>
-        </li>
-        <li class="dropdown menu-merge">
 
           <a href="#" class="dropdown-toggle fw600 p15" data-toggle="dropdown">
 
@@ -76,4 +44,3 @@
         </li>
       </ul>
     </header>
-     

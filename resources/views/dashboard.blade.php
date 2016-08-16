@@ -60,38 +60,38 @@
               <!-- Autoplay -->
                 <div class="slick-autoplay ">
                   <div style="padding:15px;height: 100" class=".col-xs-3" >
-                    <a href="{{ URL::asset('galeria/1.jpg') }}" data-lightbox="galeria" data-title="Foto1">
-                      <img data-lazy=" {{ URL::asset('galeria/1.jpg') }}" width="300" height="200">
+                    <a href="{{ URL::asset('galeria/1.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto1">
+                      <img data-lazy=" {{ URL::asset('galeria/1.jpg?'.date('is')) }}" width="300" height="200">
                       <p class="text-center"></p>
                     </a>
                   </div>
                   <div style="padding:15px;height: 100" class=".col-xs-3" >
-                    <a href="{{ URL::asset('galeria/2.jpg') }}" data-lightbox="galeria" data-title="Foto 2">
-                      <img data-lazy="{{ URL::asset('galeria/2.jpg') }}" width="300" height="200">
+                    <a href="{{ URL::asset('galeria/2.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto 2">
+                      <img data-lazy="{{ URL::asset('galeria/2.jpg?'.date('is')) }}" width="300" height="200">
                       <p class="text-center"> </p>
                     </a>
                   </div>
                     <div style="padding:15px;height: 100" class=".col-xs-3" >
-                        <a href="{{ URL::asset('galeria/3.jpg') }}" data-lightbox="galeria" data-title="Foto 3">
-                            <img data-lazy=" {{ URL::asset('galeria/3.jpg') }}" width="300" height="200">
+                        <a href="{{ URL::asset('galeria/3.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto 3">
+                            <img data-lazy=" {{ URL::asset('galeria/3.jpg?'.date('is')) }}" width="300" height="200">
                             <p class="text-center"></p>
                         </a>
                     </div>
                     <div style="padding:15px;height: 100" class=".col-xs-3" >
-                        <a href="{{ URL::asset('galeria/4.jpg') }}" data-lightbox="galeria" data-title="Foto 4">
-                            <img data-lazy=" {{ URL::asset('galeria/4.jpg') }}" width="300" height="200">
+                        <a href="{{ URL::asset('galeria/4.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto 4">
+                            <img data-lazy=" {{ URL::asset('galeria/4.jpg?'.date('is')) }}" width="300" height="200">
                             <p class="text-center"></p>
                         </a>
                     </div>
 					<div style="padding:15px;height: 100" class=".col-xs-3" >
-                    <a href="{{ URL::asset('galeria/5.png') }}" data-lightbox="galeria" data-title="Foto 5">
-                      <img data-lazy="{{ URL::asset('galeria/5.png') }}" width="300" height="200">
+                    <a href="{{ URL::asset('galeria/5.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto 5">
+                      <img data-lazy="{{ URL::asset('galeria/5.jpg?'.date('is')) }}" width="300" height="200">
                       <p class="text-center"> </p>
                     </a>
                   </div>
 				  <div style="padding:15px;height: 100" class=".col-xs-3" >
-                    <a href="{{ URL::asset('galeria/6.png') }}" data-lightbox="galeria" data-title="Foto 6">
-                      <img data-lazy="{{ URL::asset('galeria/6.png') }}" width="300" height="200">
+                    <a href="{{ URL::asset('galeria/6.jpg?'.date('is')) }}" data-lightbox="galeria" data-title="Foto 6">
+                      <img data-lazy="{{ URL::asset('galeria/6.jpg?'.date('is')) }}" width="300" height="200">
                       <p class="text-center"> </p>
                     </a>
                   </div>
@@ -167,78 +167,10 @@
 
               <!-- Timeline Widget -->
               <div class="col-md-6">
-                  <div class="panel panel-dark">
-                    <div class="panel-heading">
-                        <span class="panel-icon">
-                          <i class="fa fa-file-word-o"></i>
-                        </span>
-                      <span class="panel-title"> Ultimos documentos publicados</span><b style="color: red; margin-left:30px">En Construccion</b>
-                    </div>
-                    <div class="panel-body ptn pbn p10">
-                      <ol class="timeline-list">
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Participantes Consejo comunal.doc</a>
-                          </div>
-                          <div class="timeline-date">26/01/2016 1:25am</div>
-                        </li>
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Planos club, piscina y parrillera.pdf</a>
-                          </div>
-                          <div class="timeline-date">06/02/2016 1:01pm</div>
-                        </li>
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Planos club, piscina y parrillera.pdf</a>
-                          </div>
-                          <div class="timeline-date">06/02/2016 1:01pm</div>
-                        </li>
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Planos club, piscina y parrillera.pdf</a>
-                          </div>
-                          <div class="timeline-date">06/02/2016 1:01pm</div>
-                        </li>
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Planos club, piscina y parrillera.pdf</a>
-                          </div>
-                          <div class="timeline-date">06/02/2016 1:01pm</div>
-                        </li>
-                        <li class="timeline-item">
-                          <div class="timeline-icon bg-dark light">
-                            <span class="fa fa-tags"></span>
-                          </div>
-                          <div class="timeline-desc">
-                            Se ha publicado el archivo:
-                            <a href="#">Planos club, piscina y parrillera.pdf</a>
-                          </div>
-                          <div class="timeline-date">06/02/2016 1:01pm</div>
-                        </li>
-                      </ol>
-                    </div>
-                  </div>
+                  
+                            @include('archivos.listado')
+                  
+                  
               </div>
             </div>
             <div class="row mb15 " id="spy2">
@@ -295,7 +227,7 @@
         <!-- End: Page Footer -->
     </section>
 <form method="post" id="form"  >
-  <input type="hidden" name="_token" value="{{ csrf_token() }}">
+  <input type="hidden" id="token" name="_token" value="{{ csrf_token() }}">
 </form>
   @stop
 
@@ -385,14 +317,56 @@
 
     jQuery(document).ready(function() {
 
-      "use strict";
         validar_voto();
 
+        var parametros ={_token: $('#token').val()};
         
+        $.ajax({
+          data:  parametros,
+          url:   'list_docs',
+          method:  'post',
+          beforeSend: function () {
+            $("#resp").html("Procesando, espere por favor...");
+          },
+          success:  function (data) {
+            
+            $.each( data, function( key, value ) {
+              $("#list_doc").append('<li class="timeline-item">'+
+                                      '<div class="timeline-icon bg-dark light">'+
+                                        '<span class="fa fa-tags"></span>'+
+                                      '</div>'+
+                                      '<div class="timeline-desc">'+
+                                        'Se ha publicado el archivo:'+
+                                        '<a href="'+value.ruta+'" target="_blank">'+value.titulo+'</a>'+
+                                      '</div>'+
+                                      '<div class="timeline-date">'+value.fecha+'</div>'+
+                                    '</li>');
+            });
+          }
+        });
+
+        $.ajax({
+        url: '{!! route('deuda.index') !!}',
+        type: "GET",
+        data: {
+          '_token': $('input[name=_token]').val()
+        },
+        success: function(data){
+
+          new PNotify({
+            title: 'Resultado de la operación.',
+            text: data.msg,
+            type: data.type
+          });
+          
+        console.log(data);
+        }
+      });
+
         $('#encuesta-boton').click( function() {
            
             if ($('input[name=voto]:checked', '#encuesta-form').val()){
-              var parametros = $('#encuesta-form').serializeArray();
+              parametros = $('#encuesta-form').serializeArray();
               parametros.push({name: '_token', value: $(this).data('token')});
               
               $.ajax({

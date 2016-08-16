@@ -1,0 +1,7 @@
+[15-Jul-2016 06:34:54 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[16-Jul-2016 13:25:33 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[19-Jul-2016 12:39:02 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[22-Jul-2016 02:57:07 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[27-Jul-2016 11:28:36 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[27-Jul-2016 14:03:22 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
+[29-Jul-2016 14:55:48 CST6CDT] PHP Fatal error:  Trait 'Illuminate\Bus\Queueable' not found in /home/hostin88/public_html/versalles1.com/app/Jobs/Job.php on line 20
